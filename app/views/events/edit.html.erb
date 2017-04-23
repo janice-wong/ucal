@@ -1,0 +1,11 @@
+<%= form_tag "/events/#{@event.id}", method: :patch do %>
+  <p>name: <input type="text" name="name" value="<%= @event.name %>"></p>
+  <p>START AND END - UPDATE</p>
+  <p>duration: <input type="text" name="duration" value="<%= @event.duration %>"></p>
+  <p>location: <input type="text" name="location" value="<%= @event.location %>"></p>
+  <p><input class="btn btn-success" type="submit" value="Submit"></p>
+<% end %>
+
+<%= form_tag "/events/#{@event.id}", method: :delete do %>
+  <p><input class="btn btn-danger" type="submit" value="Delete"></p>
+<% end %>

@@ -1,0 +1,10 @@
+<%= form_tag '/groups', method: :post do %>
+  <p>Name: <input type="text" name="name"></p>
+  <p>Share Calendar?: <input type="text" name="share_cal"></p>
+  <% @friends.each do |friend| %>
+    <input type="checkbox" name="friends[]" value="<%= friend.name %>">
+      <%= friend.name.capitalize %>
+    <br>
+  <% end %>
+  <p><input class="btn btn-success" type="submit" value="Submit"></p>
+<% end %>

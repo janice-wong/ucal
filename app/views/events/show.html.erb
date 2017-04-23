@@ -1,0 +1,8 @@
+<p>name: <%= @event.name %></p>
+<p>start: <%= @event.start %></p>
+<p>end: <%= @event.end %></p>
+<p>duration: <%= @event.duration %></p>
+<p>location: <%= @event.location %></p>
+<p>status: <%= @event.status %></p>
+
+<p><%= button_to 'Edit', "/events/#{@event.id}/edit", {method: :get, class: "btn btn-warning"} %></p>

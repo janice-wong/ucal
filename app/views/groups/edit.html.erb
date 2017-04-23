@@ -1,0 +1,9 @@
+<%= form_tag "/groups/#{@group.id}", method: :patch do %>
+  <p>name: <input type="text" name="name" value="<%= @group.name %>"></p>
+  <p>share_cal: <input type="text" name="share_cal" value="<%= @group.share_cal %>"></p>
+  <p><input class="btn btn-success" type="submit" value="Submit"></p>
+<% end %>
+
+<%= form_tag "/groups/#{@group.id}", method: :delete do %>
+  <p><input class="btn btn-danger" type="submit" value="Delete"></p>
+<% end %>
