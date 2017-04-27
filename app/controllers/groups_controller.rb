@@ -72,4 +72,9 @@ class GroupsController < ApplicationController
     @group.update(status: "inactive")
     redirect_to '/groups'
   end
+
+  def calendar
+    group = Group.find(params[:id])
+    @invitations = EventInvitation.where(group_id: group.id, decision: "Accept")
+  end
 end

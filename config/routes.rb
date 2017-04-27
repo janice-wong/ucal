@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   patch '/groups/:id' => 'groups#update'
   delete '/groups/:id' => 'groups#destroy'
 
+  get '/groups/:id/group_calendar' => 'groups#calendar'
+
   patch '/groupinvitations/:id' => 'group_invitations#update'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 end

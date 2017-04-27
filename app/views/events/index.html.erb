@@ -1,3 +1,5 @@
+<div id="calendar"></div>
+
 <% if @pending_events.count > 0 %>
   <h3>Pending</h3>
   <% @pending_events.each do |event| %>
@@ -43,5 +45,3 @@
     <hr>
   <% end %>
 <% end %>
-
-<div id="calendar"></div>

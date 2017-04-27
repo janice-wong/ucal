@@ -5,27 +5,23 @@ class EventsController < ApplicationController
     @tentative_events = []
     if current_user
       EventInvitation.where(user_id: current_user.id).each do |invitation|
-        if invitation.decision=="pending" && Event.find(invitation.event_id).status != "cancelled"
+        if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
           @pending_events << invitation.event
-        elsif invitation.decision=="Accept" && Event.find(invitation.event_id).status != "cancelled"
+        elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
           @accepted_events << invitation.event
-        elsif invitation.decision=="Tentative" && Event.find(invitation.event_id).status != "cancelled"
+        elsif invitation.decision == "Tentative" && Event.find(invitation.event_id).status != "cancelled"
           @tentative_events << invitation.event
         end
       end
-    p '*'*50
-    p @accepted_events
-    p @accepted_events.count
-    p '*'*50
     end
-
-    render 'index.html.erb'
   end
 
   def new
     @groups = []
     User.find(current_user.id).group_invitations.where(decision: "Accept").each do |invitation|
-      @groups << Group.find(invitation.group_id).name
+      if Group.find(invitation.group_id).status == "active"
+        @groups << Group.find(invitation.group_id).name
+      end
     end
     render 'new.html.erb'
   end
@@ -62,7 +58,7 @@ class EventsController < ApplicationController
         event_invite.update(group_id: Group.find_by(name: group).id)
         
         members = []
-        GroupInvitation.where(group_id:Group.find_by(name: group).id, decision: "Accept").each do |group_invite|
+        GroupInvitation.where(group_id: Group.find_by(name: group).id, decision: "Accept").each do |group_invite|
           members << User.find(group_invite.user_id)
         end
         members -= [current_user]
@@ -75,7 +71,6 @@ class EventsController < ApplicationController
             decision: "pending"
           )
         end
-
       end
     end
     redirect_to '/events'

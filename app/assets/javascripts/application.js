@@ -24,7 +24,20 @@ $(document).ready(function() {
 
     $('#calendar').fullCalendar({
         // put your options and callbacks here
-        events: '/events.json'
-    })
+        header: {
+          left:   'today prev,next',
+          center: 'title',
+          right:  'month,agendaWeek,agendaDay,listWeek'
+        },
+        events: '/events.json',
+        eventRender: function(event, element) { 
+          element.find('.fc-event-title').html(event.title);
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function() {
+          window.location.href = '/events/new';
+        },
+    });
 
 });
