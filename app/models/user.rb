@@ -5,4 +5,5 @@ class User < ApplicationRecord
   has_many :inverse_friendhips, class_name: "Friendship", foreign_key: "friend_id"
   has_many :inverse_friends, through: :inverse_friendhips, source: :user
   has_many :group_invitations
+  has_many :blocks
 end

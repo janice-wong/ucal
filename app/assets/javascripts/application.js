@@ -11,12 +11,16 @@
 // about supported directives.
 //
 //= require jquery
-//= require bootstrap-sprockets
 //= require jquery_ujs
+//= require bootstrap-sprockets
+//= require bootstrap-multiselect
+//= require bootstrap-select
+//= require bootstrap/alert
+//= require bootstrap/dropdown
 //= require turbolinks
-//= require_tree .
 //= require moment 
 //= require fullcalendar
+//= require_tree .
 
 $(document).ready(function() {
 
@@ -29,15 +33,21 @@ $(document).ready(function() {
           center: 'title',
           right:  'month,agendaWeek,agendaDay,listWeek'
         },
-        events: '/events.json',
+        events: 'events.json',
         eventRender: function(event, element) { 
-          element.find('.fc-event-title').html(event.title);
+          if (event.user) {
+            element.find('.fc-title').append(" - " + event.user);
+          }
         },
         selectable: true,
         selectHelper: true,
         select: function() {
           window.location.href = '/events/new';
         },
+    });
+
+    $(document).ready(function() {
+      $('.multiselect').multiselect();
     });
 
 });

@@ -47,12 +47,24 @@ class EventsController < ApplicationController
       location: params[:location],
       status: "sent"
     )
+
     event_invite = EventInvitation.create(
       event_id: event.id,
       user_id: current_user.id,
       mem_type: "owner",
       decision: "Accept"
     )
+
+    min_duration = (event.end - event.start) / 60
+    i = 0
+    (min_duration / 15).times do
+      Block.create(
+        user_id: current_user.id,
+        start: event.start + i
+      )
+      i += (15 * 60)
+    end
+
     if params[:groups]
       params[:groups].each do |group|
         event_invite.update(group_id: Group.find_by(name: group).id)

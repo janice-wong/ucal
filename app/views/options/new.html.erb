@@ -1,0 +1,35 @@
+<%= form_tag "/options", method: :post do %>
+  <p>
+    Day(s): 
+    <select class="selectpicker" name="days[]">
+      <option>Sunday</option>
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+    </select>
+  </p>
+  <br>
+
+  <p>Dates</p>
+    <p><%= date_select :start_date,  :date, order: [:month, :day, :year] %> - <%= date_select :end_date, :date, order: [:month, :day, :year] %></p>
+  <br>
+
+  <p>Times</p>
+    <p><%= time_select :start_time, :time, ampm: true, minute_step: 15 %> - <%= time_select :end_time, :time, ampm: true, minute_step: 15 %></p>
+  <br>
+
+  <p>Duration: 
+    <input type="text" name="duration">
+    <select class="selectpicker", name = "duration_unit">
+      <option value="min">min</option>
+      <option value="hr">hr(s)</option>
+    </select>
+  </p>
+  <br>
+
+  <button class="btn btn-primary">Submit</button>
+
+<% end %>

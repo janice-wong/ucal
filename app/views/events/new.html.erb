@@ -4,9 +4,11 @@
   <p>name: <input type="text" name="name"></p>
   <br>
   <h3>Who</h3>
-  <% @groups.each do |group| %>
-    <p><input type="checkbox" name="groups[]" value="<%= group %>"> <%= group %></p>
-  <% end %>
+  <select class="multiselect" multiple="multiple", name = "groups[]">
+    <% @groups.each do |group| %>
+      <p><option value="<%= group %>"> <%= group %></p>
+    <% end %>
+  </select>
   <br>
   <h3>When</h3>
   <p>Start: <%= date_select :start_date,  :date, order: [:month, :day, :year] %> - 
@@ -17,5 +19,19 @@
   <h3>Where</h3>
   <p>duration: <input type="text" name="duration"></p>
   <p>location: <input type="text" name="location"></p>
-  <p><input class="btn btn-success" type="submit" value="Submit"></p>
+
+  <!-- if known date -->
+  <p><input class="btn btn-success" type="submit" value="Send Invitation"></p>
+
 <% end %>
+
+  <!-- if group(s) selected share calendars -->
+  <p><button class="btn btn-primary" type="submit" href="">View Group Calendar</button></p>
+
+<%= form_tag '/options/new', method: :get do %>
+  <!-- HOW TO PASS IN HIDDEN GROUP PARAMETER FROM ABOVE???? -->
+  <p><input  type="hidden" name="groups" value="????????????"></p>
+  <p><input class="btn btn-warning" type="submit" value="Provide Options"></p>
+  <!-- JS to show instead of opening new page ... -->
+<% end %>
+

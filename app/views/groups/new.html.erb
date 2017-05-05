@@ -1,10 +1,22 @@
 <%= form_tag '/groups', method: :post do %>
   <p>Name: <input type="text" name="name"></p>
-  <p>Share Calendar?: <input type="text" name="share_cal"></p>
-  <% @friends.each do |friend| %>
-    <input type="checkbox" name="friends[]" value="<%= friend.name %>">
-      <%= friend.name.capitalize %>
-    <br>
-  <% end %>
+  <p>
+    Share Calendar?:
+    <select class="selectpicker", name = "share_cal">
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  </p>
+  <p>
+    Members: 
+    <select class="multiselect" multiple="multiple", name = "friends[]">
+      <% @friends.each do |friend| %>
+        <option value="<%= friend.name %>">
+          <%= friend.name.capitalize %>
+        </option>
+      <% end %>
+    </select>
+  </p>
+  <br>
   <p><input class="btn btn-success" type="submit" value="Submit"></p>
 <% end %>

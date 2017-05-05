@@ -1,5 +1,12 @@
-<p>name: <%= @group.name.capitalize %></p>
-<p>share_cal: <%= @group.share_cal %></p>
+<p>Name: <%= @group.name.capitalize %></p>
+<p>
+  Share Calendar?: 
+  <% if @group.share_cal %>
+    Yes
+  <% else %>
+    No
+  <% end %>
+</p>
 <% if current_user==GroupInvitation.find_by(group_id:@group.id,mem_type:"owner").user %>
   <table class="table">
     <thead>

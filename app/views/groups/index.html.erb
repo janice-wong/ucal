@@ -1,6 +1,13 @@
 <% @pending_groups.each do |group| %>
   <p>Name: <%= group.name %></p>
-  <p>Share Calendar?: <%= group.share_cal %></p>
+  <p>
+    Share Calendar?: 
+    <% if group.share_cal %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </p>
   <% members = [] %>
   <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
     <% members << invitation.user.name.capitalize %>
@@ -15,15 +22,24 @@
 
 <% @accepted_groups.each do |group| %>
   <p>Name: <%= group.name %></p>
-  <p>Share Calendar?: <%= group.share_cal %></p>
+  <p>
+    Share Calendar?: 
+    <% if group.share_cal %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </p>
   <% members = [] %>
   <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
     <% members << invitation.user.name.capitalize %>
   <% end %>
   <p>Members: <%= members.join(", ") %></p>
-  <% if current_user==GroupInvitation.find_by(group_id:group.id,mem_type:"owner").user %>
+
+  <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
     <p><%= button_to 'Show', "/groups/#{group.id}", {method: :get, class: "btn btn-default"} %></p>
   <% end %>
+  
   <p><%= button_to 'Add Event', "/events/new", {method: :get, class: "btn btn-primary"} %></p>
   <hr>
 <% end %>

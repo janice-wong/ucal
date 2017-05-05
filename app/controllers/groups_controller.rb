@@ -3,9 +3,9 @@ class GroupsController < ApplicationController
     @pending_groups = []
     @accepted_groups = []
     GroupInvitation.where(user_id: current_user[:id]).each do |invitation|
-      if invitation.decision=="pending" && invitation.group.status=="active"
+      if invitation.decision == "pending" && invitation.group.status == "active"
         @pending_groups << invitation.group
-      elsif invitation.decision=="Accept" && invitation.group.status=="active"
+      elsif invitation.decision == "Accept" && invitation.group.status == "active"
         @accepted_groups << invitation.group
       end
     end
@@ -23,12 +23,14 @@ class GroupsController < ApplicationController
       share_cal: params[:share_cal],
       status: "active"
     )
+
     GroupInvitation.create(
       user_id: current_user[:id],
       group_id: group[:id],
       mem_type: "owner",
       decision: "Accept"
     )
+    
     params[:friends].each do |friend|
       GroupInvitation.create(
         user_id: User.find_by(name: friend).id,
@@ -42,9 +44,9 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
-    @group_pending = GroupInvitation.where(group_id:@group.id,decision:"pending")
-    @group_accept = GroupInvitation.where(group_id:@group.id,decision:"Accept")
-    @group_decline = GroupInvitation.where(group_id:@group.id,decision:"Decline")
+    @group_pending = GroupInvitation.where(group_id: @group.id, decision: "pending")
+    @group_accept = GroupInvitation.where(group_id: @group.id, decision: "Accept")
+    @group_decline = GroupInvitation.where(group_id: @group.id, decision: "Decline")
     p '*' * 50
     p @group_pending
     p @group_accept
@@ -73,7 +75,7 @@ class GroupsController < ApplicationController
     redirect_to '/groups'
   end
 
-  def calendar
+  def events
     group = Group.find(params[:id])
     @invitations = EventInvitation.where(group_id: group.id, decision: "Accept")
   end

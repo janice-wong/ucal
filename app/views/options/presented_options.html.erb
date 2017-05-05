@@ -1,0 +1,6 @@
+Here are your options!
+
+<br>
+<% @available_options.each do |available_option| %>
+  <p><%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %></p>
+<% end %>
