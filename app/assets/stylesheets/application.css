@@ -16,3 +16,7 @@
  *= require bootstrap-multiselect
  *= require bootstrap-select
  */
+
+.personalized-container {
+  padding-left: 64px;
+}

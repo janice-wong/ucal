@@ -1,8 +1,55 @@
+<section id="page-breadcrumb">
+    <div class="vertical-center sun">
+         <div class="container">
+            <div class="row">
+                <div class="action">
+                    <div class="col-sm-12">
+                        <h1 class="title">Sign Up</h1>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <%= form_tag '/users', method: :post do %>
-  <p>name: <input type="text" name="name"></p>
-  <p>email: <input type="email" name="email"></p>
-  <p>phone: <input type="text" name="phone"></p>
-  <p>password: <input type="password" name="password"></p>
-  <p>confirm password: <input type="password" name="password_confirmation"></p>
-  <p><input class="btn btn-succes" type="submit" value="Submit"></p>
+  <section id="services">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+            <h2>Name</h2>
+            <p><input type="text" name="name"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+            <h2>Email</h2>
+            <p><input type="email" name="email"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+            <h2>Phone</h2>
+            <p><input type="text" name="phone"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+            <h2>Password</h2>
+            <p><input type="password" name="password"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+            <h2>Confirm Password</h2>
+            <p><input type="password" name="password_confirmation"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+          <h2><button class="btn btn-success" type="submit">Sign Up</button></h2>
+        </div>
+      </div>
+    </div>
+  </section>
 <% end %>

@@ -1,4 +1,6 @@
 class EventsController < ApplicationController
+  before_action :authenticate_user!
+  
   def index
     @pending_events = []
     @accepted_events = []

@@ -1,8 +1,55 @@
+<section id="page-breadcrumb">
+    <div class="vertical-center sun">
+         <div class="container">
+            <div class="row">
+                <div class="action">
+                    <div class="col-sm-12">
+                        <h1 class="title">New Event</h1>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <%= form_tag '/events', method: :post do %>
-  <br>
-  <h3>What</h3>
-  <p>name: <input type="text" name="name"></p>
-  <br>
+  <section id="services">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                  <div class="single-service">
+                      <h2>Who</h2>
+                      <select class="multiselect" multiple="multiple", name = "groups[]">
+                        <% @groups.each do |group| %>
+                          <p><option value="<%= group %>"> <%= group %></p>
+                        <% end %>
+                      </select>
+                  </div>
+              </div>
+              <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="600ms">
+                  <div class="single-service">
+                    <h2>What</h2>
+                    <p><input type="text" name="name"></p>
+                  </div>
+              </div>
+              <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
+                  <div class="single-service">
+                      <h2>When</h2>
+                      <select class="multiselect" multiple="multiple", name = "groups[]">
+                        <p>Known Location?</p>
+                      </select>
+                  </div>
+              </div>
+              <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                  <div class="single-service">
+                      <h2>Where</h2>
+                      <p><input type="text" name="location"></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
   <h3>Who</h3>
   <select class="multiselect" multiple="multiple", name = "groups[]">
     <% @groups.each do |group| %>
@@ -16,9 +63,6 @@
   <p>End: <%= date_select :end_date, :date, order: [:month, :day, :year] %> - 
   <%= time_select :end_time, :time, ampm: true, minute_step: 15 %></p>
   <br>
-  <h3>Where</h3>
-  <p>duration: <input type="text" name="duration"></p>
-  <p>location: <input type="text" name="location"></p>
 
   <!-- if known date -->
   <p><input class="btn btn-success" type="submit" value="Send Invitation"></p>
