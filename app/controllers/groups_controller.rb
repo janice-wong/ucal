@@ -76,7 +76,7 @@ class GroupsController < ApplicationController
   end
 
   def events
-    group = Group.find(params[:id])
+    group = Group.find(params[:group_id])
     @invitations = EventInvitation.where(group_id: group.id, decision: "Accept")
   end
 end

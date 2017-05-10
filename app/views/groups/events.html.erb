@@ -1,1 +1,34 @@
-<div id="calendar"></div>
+<div class="personalized-container">
+  <div class="row">
+    <div class="col-md-9" data-wow-duration="1000ms" data-wow-delay="300ms">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#calendar').fullCalendar({
+        // put your options and callbacks here
+        header: {
+          left:   'today prev,next',
+          center: 'title',
+          right:  'month,agendaWeek,agendaDay,listWeek'
+        },
+        events: 'events.json',
+        eventRender: function(event, element) { 
+          if (event.user) {
+            element.find('.fc-title').append(" - " + event.user);
+          }
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function() {
+          window.location.href = '/events/new';
+        },
+    });
+
+});
+
+</script>

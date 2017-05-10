@@ -1,45 +1,80 @@
-<% @pending_groups.each do |group| %>
-  <p>Name: <%= group.name %></p>
-  <p>
-    Share Calendar?: 
-    <% if group.share_cal %>
-      Yes
-    <% else %>
-      No
-    <% end %>
-  </p>
-  <% members = [] %>
-  <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
-    <% members << invitation.user.name.capitalize %>
-  <% end %>
-  <p>Members: <%= members.join(", ") %></p>
-  <%= form_tag "/groupinvitations/#{GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id}", method: :patch do %>
-    <p><input type="submit" class="btn btn-success" name="decision" value="Accept"></p>
-    <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
-  <% end %>
-  <hr>
+<% if @pending_groups.count < 1 && @accepted_groups.count < 1 %>
+  <p>You have no groups.</p>
 <% end %>
 
-<% @accepted_groups.each do |group| %>
-  <p>Name: <%= group.name %></p>
-  <p>
-    Share Calendar?: 
-    <% if group.share_cal %>
-      Yes
-    <% else %>
-      No
+<div class="container">
+  <div class="row">
+    <% if @pending_groups.count > 0 %>
+      <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Pending Groups</h1>
+      <% @pending_groups.each do |group| %>
+        <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+          <div class="portfolio-wrapper">   
+            <div class="portfolio-single">
+              <div class="portfolio-thumb">
+                <h2><strong><%= group.name.capitalize %></strong></h2>
+                <p>
+                  <strong>Share Calendar? </strong>
+                  <% if group.share_cal %>
+                    Yes
+                  <% else %>
+                    No
+                  <% end %>
+                </p>
+                <% members = [] %>
+                <% GroupInvitation.where(group_id:group.id,decision:"pending").each do |invitation| %>
+                  <% members << invitation.user.name.capitalize %>
+                <% end %>
+                <p><strong>Members: </strong><%= members.join(", ") %></p>
+                <br>
+              </div>
+              <div class="portfolio-view">
+                <ul class="nav nav-pills">
+                  <%= form_tag "/groupinvitations/#{GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id}", method: :patch do %>
+                    <li><input type="submit" class="btn btn-success" name="decision" value="Accept"></li>
+                    <li><input type="submit" class="btn btn-danger" name="decision" value="Decline"></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
     <% end %>
-  </p>
-  <% members = [] %>
-  <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
-    <% members << invitation.user.name.capitalize %>
-  <% end %>
-  <p>Members: <%= members.join(", ") %></p>
-
-  <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
-    <p><%= button_to 'Show', "/groups/#{group.id}", {method: :get, class: "btn btn-default"} %></p>
-  <% end %>
-  
-  <p><%= button_to 'Add Event', "/events/new", {method: :get, class: "btn btn-primary"} %></p>
-  <hr>
-<% end %>
+  </div>
+  <div class="row">
+    <% if @accepted_groups.count > 0 %>
+      <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Accepted Groups</h1>
+      <% @accepted_groups.each do |group| %>
+        <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+          <div class="portfolio-wrapper">   
+            <div class="portfolio-single">
+              <div class="portfolio-thumb">
+                <h2><strong><%= group.name.capitalize %></strong></h2>
+                <p>
+                  <strong>Share Calendar? </strong>
+                  <% if group.share_cal %>
+                    Yes
+                  <% else %>
+                    No
+                  <% end %>
+                </p>
+                <% members = [] %>
+                <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
+                  <% members << invitation.user.name.capitalize %>
+                <% end %>
+                <p><strong>Members: </strong><%= members.join(", ") %></p>
+                <br>
+              </div>
+              <div class="portfolio-view">
+                  <ul class="nav nav-pills">
+                      <li><a href="/events/new">+</a></li>
+                      <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
+                  </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post '/login' => 'sessions#create'
   delete '/logout' => 'sessions#destroy'
 
+  get '/' => 'events#index'
   get '/events' => 'events#index'
   get '/events/new' => 'events#new'
   post '/events' => 'events#create'
@@ -27,9 +28,9 @@ Rails.application.routes.draw do
   patch '/groups/:id' => 'groups#update'
   delete '/groups/:id' => 'groups#destroy'
 
-  get '/groups/:id/events' => 'groups#events'
+  get '/groups/:group_id/events' => 'groups#events'
 
-  patch '/groupinvitations/:id' => 'group_invitations#update'
+  patch '/groupinvitations/:id/accept' => 'group_invitations#update'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
   get '/options' => 'options#index'

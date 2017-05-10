@@ -17,37 +17,6 @@
 //= require bootstrap-select
 //= require bootstrap/alert
 //= require bootstrap/dropdown
-//= require turbolinks
 //= require moment 
 //= require fullcalendar
 //= require_tree .
-
-$(document).ready(function() {
-
-    // page is now ready, initialize the calendar...
-
-    $('#calendar').fullCalendar({
-        // put your options and callbacks here
-        header: {
-          left:   'today prev,next',
-          center: 'title',
-          right:  'month,agendaWeek,agendaDay,listWeek'
-        },
-        events: 'events.json',
-        eventRender: function(event, element) { 
-          if (event.user) {
-            element.find('.fc-title').append(" - " + event.user);
-          }
-        },
-        selectable: true,
-        selectHelper: true,
-        select: function() {
-          window.location.href = '/events/new';
-        },
-    });
-
-    $(document).ready(function() {
-      $('.multiselect').multiselect();
-    });
-
-});

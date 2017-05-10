@@ -52,3 +52,30 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#calendar').fullCalendar({
+        // put your options and callbacks here
+        header: {
+          left:   'today prev,next',
+          center: 'title',
+          right:  'month,agendaWeek,agendaDay,listWeek'
+        },
+        events: 'events.json',
+        eventRender: function(event, element) { 
+          if (event.user) {
+            element.find('.fc-title').append(" - " + event.user);
+          }
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function() {
+          window.location.href = '/events/new';
+        },
+    });
+
+});
+
+</script>

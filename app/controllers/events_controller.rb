@@ -29,65 +29,73 @@ class EventsController < ApplicationController
   end
 
   def create
-    event = Event.create(
-      name: params[:name],
-      start: DateTime.new(
-        params["start_date"]["date(1i)"].to_i,
-        params["start_date"]["date(2i)"].to_i,
-        params["start_date"]["date(3i)"].to_i,
-        params["start_time"]["time(4i)"].to_i,
-        params["start_time"]["time(5i)"].to_i
-      ),
-      end: DateTime.new(
-        params["end_date"]["date(1i)"].to_i,
-        params["end_date"]["date(2i)"].to_i,
-        params["end_date"]["date(3i)"].to_i,
-        params["end_time"]["time(4i)"].to_i,
-        params["end_time"]["time(5i)"].to_i
-      ),
-      # duration: params[:duration],
-      location: params[:location],
-      status: "sent"
-    )
-
-    event_invite = EventInvitation.create(
-      event_id: event.id,
-      user_id: current_user.id,
-      mem_type: "owner",
-      decision: "Accept"
-    )
-
-    min_duration = (event.end - event.start) / 60
-    i = 0
-    (min_duration / 15).times do
-      Block.create(
-        user_id: current_user.id,
-        start: event.start + i
+    if params[:submit] == "create"
+      event = Event.create(
+        name: params[:name],
+        start: DateTime.new(
+          params["start_date"]["date(1i)"].to_i,
+          params["start_date"]["date(2i)"].to_i,
+          params["start_date"]["date(3i)"].to_i,
+          params["start_time"]["time(4i)"].to_i,
+          params["start_time"]["time(5i)"].to_i
+        ),
+        end: DateTime.new(
+          params["end_date"]["date(1i)"].to_i,
+          params["end_date"]["date(2i)"].to_i,
+          params["end_date"]["date(3i)"].to_i,
+          params["end_time"]["time(4i)"].to_i,
+          params["end_time"]["time(5i)"].to_i
+        ),
+        # duration: params[:duration],
+        location: params[:location],
+        status: "sent"
       )
-      i += (15 * 60)
-    end
 
-    if params[:groups]
-      params[:groups].each do |group|
-        event_invite.update(group_id: Group.find_by(name: group).id)
-        
-        members = []
-        GroupInvitation.where(group_id: Group.find_by(name: group).id, decision: "Accept").each do |group_invite|
-          members << User.find(group_invite.user_id)
-        end
-        members -= [current_user]
-        members.each do |member|
-          EventInvitation.create(
-            event_id: event.id,
-            group_id: Group.find_by(name: group).id,
-            user_id: member.id,
-            mem_type: "Partcipant",
-            decision: "pending"
-          )
+      event_invite = EventInvitation.create(
+        event_id: event.id,
+        user_id: current_user.id,
+        mem_type: "owner",
+        decision: "Accept"
+      )
+
+      min_duration = (event.end - event.start) / 60
+      i = 0
+      (min_duration / 15).to_i.times do
+        Block.create(
+          user_id: current_user.id,
+          start: event.start + i
+        )
+        i += (15 * 60)
+      end
+
+      if params[:groups]
+        params[:groups].each do |group|
+          event_invite.update(group_id: Group.find_by(name: group).id)
+          
+          members = []
+          GroupInvitation.where(group_id: Group.find_by(name: group).id, decision: "Accept").each do |group_invite|
+            members << User.find(group_invite.user_id)
+          end
+          members -= [current_user]
+          members.each do |member|
+            EventInvitation.create(
+              event_id: event.id,
+              group_id: Group.find_by(name: group).id,
+              user_id: member.id,
+              mem_type: "Partcipant",
+              decision: "pending"
+            )
+          end
         end
       end
+      redirect_to '/events'
+
+    elsif params[:submit] == "options"
+      render 'options.html.erb'
+
+    elsif params[:submit] == "group_cal"
+      redirect_to "/groups//events"
     end
-    redirect_to '/events'
   end
 
   def show

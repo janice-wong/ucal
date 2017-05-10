@@ -1,22 +1,50 @@
-<%= form_tag '/groups', method: :post do %>
-  <p>Name: <input type="text" name="name"></p>
-  <p>
-    Share Calendar?:
-    <select class="selectpicker", name = "share_cal">
-      <option value="true">Yes</option>
-      <option value="false">No</option>
-    </select>
-  </p>
-  <p>
-    Members: 
-    <select class="multiselect" multiple="multiple", name = "friends[]">
-      <% @friends.each do |friend| %>
-        <option value="<%= friend.name %>">
-          <%= friend.name.capitalize %>
-        </option>
-      <% end %>
-    </select>
-  </p>
-  <br>
-  <p><input class="btn btn-success" type="submit" value="Submit"></p>
-<% end %>
+<h1 class="text-center wow fadeIn">New Group</h1>
+
+<section id="home-slider">
+  <div class="container">
+    <div class="main-slider">
+      <div class="slide-text">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <%= form_tag '/groups', method: :post do %>
+                <h4>Name: <input type="text" name="name"></h4>
+                <br>
+                <h4>
+                  Share Calendar?
+                  <select class="selectpicker", name = "share_cal">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </h4>
+                <br>
+                <h4>
+                  Members:
+                  <select class="multiselect" multiple="multiple", name = "friends[]">
+                    <% @friends.each do |friend| %>
+                      <option value="<%= friend.name %>">
+                        <%= friend.name.capitalize %>
+                      </option>
+                    <% end %>
+                  </select>
+                </h4>
+                <br>
+                <p><input class="btn btn-success" type="submit" value="Submit"></p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $(document).ready(function() {
+      $('.multiselect').multiselect();
+    });
+
+});
+</script>
