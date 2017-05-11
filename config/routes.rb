@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   get '/events/:id/edit' => 'events#edit'
   patch '/events/:id' => 'events#update'
   delete '/events/:id' => 'events#destroy'
+  post '/events/options' => 'events#create_options'
+  post '/events/send_options' => 'events#send_options'
 
   get '/groups' => 'groups#index'
   get '/groups/new' => 'groups#new'
@@ -30,11 +32,9 @@ Rails.application.routes.draw do
 
   get '/groups/:group_id/events' => 'groups#events'
 
-  patch '/groupinvitations/:id/accept' => 'group_invitations#update'
+  get '/groupinvitations/:id/accept' => 'group_invitations#accept'
+  get '/groupinvitations/:id/decline' => 'group_invitations#decline'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
-  get '/options' => 'options#index'
-  get '/options/new' => 'options#new'
-  post '/options' => 'options#create'
-  get '/presented_options' => 'options#presented_options'
+
 end

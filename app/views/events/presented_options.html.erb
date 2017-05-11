@@ -1,0 +1,41 @@
+<h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">New Event</h1>
+<br>
+
+<section id="services">
+  <div class="container">
+    <div class="row" wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+      <%= form_tag '/events/send_options', method: :post do %>
+        <h4>Who</h4>
+          <% @groups.each do |group| %>
+            <p><option value="<%= group %>"> <%= group %></option></p>
+          <% end %>
+        <br>
+        <h4>What</h4>
+        <p><input type="text" name="name"></p>
+        <br>
+        <h4>Where</h4>
+        <p><input type="text" name="location"></p>
+        <br>
+        <h4>Options</h4>
+        <select class="multiselect" multiple="multiple", name = "options[]">
+          <% @available_options.each do |available_option| %>
+          <p><option value="<%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %>"><%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %></option></p>
+          <% end %>
+        </select>
+        <br>
+        <br>
+        <button class="btn btn-success" type="submit">Send Options</button>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $(document).ready(function() {
+      $('.multiselect').multiselect();
+    });
+
+});
+</script>

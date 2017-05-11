@@ -1,10 +1,18 @@
 class GroupInvitationsController < ApplicationController
-  def update
+  def accept
     @group_invitation = GroupInvitation.find(params[:id])
     @group_invitation.update(
-      decision: params[:decision]
+      decision: "Accept"
     )
-    if @group_invitation.decision == "Decline" && GroupInvitation.where(group_id: @group_invitation.group_id)
+    redirect_to '/groups'
+  end
+
+  def decline
+    @group_invitation = GroupInvitation.find(params[:id])
+    @group_invitation.update(
+      decision: "Decline"
+    )
+    if GroupInvitation.where(group_id: @group_invitation.group_id).count == 2
       @group_invitation.group.update(
         status: "cancelled"
       )

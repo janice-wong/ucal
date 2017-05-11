@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start: 2017-05-11 13:31:07
+  end: 2017-05-11 13:31:07
+  event_id: 1
+  user_id: 1
+  vote: MyString
+
+two:
+  start: 2017-05-11 13:31:07
+  end: 2017-05-11 13:31:07
+  event_id: 1
+  user_id: 1
+  vote: MyString

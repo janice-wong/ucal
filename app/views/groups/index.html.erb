@@ -29,10 +29,8 @@
               </div>
               <div class="portfolio-view">
                 <ul class="nav nav-pills">
-                  <%= form_tag "/groupinvitations/#{GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id}", method: :patch do %>
-                    <li><input type="submit" class="btn btn-success" name="decision" value="Accept"></li>
-                    <li><input type="submit" class="btn btn-danger" name="decision" value="Decline"></li>
-                  <% end %>
+                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/accept">+</a></li>
+                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">-</a></li>
                 </ul>
               </div>
             </div>
@@ -66,10 +64,13 @@
                 <br>
               </div>
               <div class="portfolio-view">
-                  <ul class="nav nav-pills">
-                      <li><a href="/events/new">+</a></li>
-                      <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
-                  </ul>
+                <ul class="nav nav-pills">
+                  <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
+                    <li><a href="/groups/<%= group.id %>">D</a></li>
+                  <% end %>
+                  <li><a href="/events/new">+</a></li>
+                  <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
+                </ul>
               </div>
             </div>
           </div>

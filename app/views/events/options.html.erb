@@ -1,4 +1,11 @@
-<%= form_tag "/options", method: :post do %>
+<%= form_tag "/events/options", method: :post do %>
+  <p>
+    Who:
+    <% @group_names.each do |group_name| %>
+      <%= group_name %>
+      <input type="hidden" name="group_names[]" value="<%= group_name %>">
+    <% end %>
+  </p>
   <p>
     Day(s): 
     <select class="selectpicker" name="days[]">

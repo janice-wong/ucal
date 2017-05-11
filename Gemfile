@@ -12,6 +12,7 @@ gem 'fullcalendar-rails'
 gem 'momentjs-rails'
 gem 'bootstrap-multiselect-rails'
 gem 'bootstrap-select-rails'
+gem 'jquery-timepicker-rails'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server

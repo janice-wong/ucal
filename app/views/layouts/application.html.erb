@@ -32,7 +32,7 @@
                 <% if current_user && params[:group_id]%>
                   <h1><a href="/groups/<%= Group.find(params[:group_id]).id %>/events"><%= Group.find(params[:group_id]).name.capitalize %>'s Calendar</a></h1>
                 <% elsif current_user %>
-                  <h1><a href="/events"><%= current_user.name.capitalize %>'s Calendar</a></h1>
+                  <h1><a>Welcome <%= current_user.name.capitalize %></a></h1>
                 <% end %>
               </a>
           </div>
