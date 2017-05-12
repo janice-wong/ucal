@@ -6,7 +6,7 @@
     <div class="row" wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
       <%= form_tag '/events', method: :post do %>
         <h4>Who</h4>
-        <select class="multiselect" multiple="multiple", name = "groups[]">
+        <select class="multiselect" multiple="multiple" name = "groups[]">
           <% @groups.each do |group| %>
             <p><option value="<%= group %>"> <%= group %></option></p>
           <% end %>
@@ -34,9 +34,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    $(document).ready(function() {
-      $('.multiselect').multiselect();
-    });
-
+  $('.multiselect').multiselect();
+  
 });
 </script>

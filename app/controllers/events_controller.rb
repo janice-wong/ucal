@@ -92,6 +92,22 @@ class EventsController < ApplicationController
 
     elsif params[:submit] == "options" && params[:groups]
       @group_names = params[:groups]
+      event = Event.create(
+        name: params[:name],
+        location: params[:location]
+      )
+
+      invite = EventInvitation.create(
+        user_id: current_user.id,
+        mem_type: "owner",
+        event_id: event.id,
+        decision: "Accept"
+      )
+      if @group_names.count == 1
+        invite.update(group_id: Group.find_by(name: @group_names[0]).id)
+      end
+
+      @event = event
       render 'options.html.erb'
 
     elsif params[:submit] == "group_cal" && params[:groups]
@@ -236,12 +252,66 @@ class EventsController < ApplicationController
     end
 
     @available_options = day_time_options.select { |option| option[:available] == true }
-    @groups = params[:group_names]
+    @group_names = params[:group_names]
+    @event = Event.find_by(name: params[:event_name])
 
     render 'presented_options.html.erb'
   end
 
   def send_options
+    p params[:options]
+    option_array = []
+    params[:options].each do |option|
+    end
+
+    event = Event.find_by(name: params[:event_name])
+    event.update(
+      status: "sent options"
+    )
+
+    user_array = []
+    GroupInvitation.where(group_id: Group.find_by(name: params[:group_name]).id).each do |invitation|
+      user_array << invitation.user
+    end
+
+    # params[:options].each do |option|
+    option_test = [
+      {
+        start_time: DateTime.new(2017, 5, 14, 11),
+        end_time: DateTime.new(2017, 5, 14, 12)
+      },
+      {
+        start_time: DateTime.new(2017, 5, 14, 12),
+        end_time: DateTime.new(2017, 5, 14, 13)
+      }
+    ]
+    option_test.each do |option|
+      (user_array - [current_user]).each do |user|
+        Option.create(
+          start: option[:start_time],
+          end: option[:end_time],
+          event_id: event.id,
+          user_id: user.id,
+          vote: "pending"
+        )
+      end
+
+      Option.create(
+        start: option[:start_time],
+        end: option[:end_time],
+        event_id: event.id,
+        user_id: current_user.id,
+        vote: "yes"
+      )
+    end
+  end
+
+  def option_proposals
+    @event_ids = Option.where(user_id: current_user.id, vote: "pending").distinct.pluck(:event_id)
+    render 'option_proposals.html.erb'
+  end
+
+  def vote_on_options
     
   end
 end

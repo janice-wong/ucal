@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   delete '/events/:id' => 'events#destroy'
   post '/events/options' => 'events#create_options'
   post '/events/send_options' => 'events#send_options'
+  get '/option_proposals' => 'events#option_proposals'
+  post '/option_proposals' => 'events#vote_on_options'
+  # should option methods be in the option model?
 
   get '/groups' => 'groups#index'
   get '/groups/new' => 'groups#new'

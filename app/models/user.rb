@@ -6,4 +6,5 @@ class User < ApplicationRecord
   has_many :inverse_friends, through: :inverse_friendhips, source: :user
   has_many :group_invitations
   has_many :blocks
+  has_many :options
 end

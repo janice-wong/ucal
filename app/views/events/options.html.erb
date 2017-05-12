@@ -6,6 +6,9 @@
       <input type="hidden" name="group_names[]" value="<%= group_name %>">
     <% end %>
   </p>
+  <p>What: <%= @event.name %></p>
+  <p>Location: <%= @event.location %></p>
+  <input type="hidden" name="event_name" value="<%= @event.name %>">
   <p>
     Day(s): 
     <select class="selectpicker" name="days[]">

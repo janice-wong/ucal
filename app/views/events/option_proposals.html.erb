@@ -1,0 +1,63 @@
+<% if Option.where(user_id: current_user.id, vote: "pending").count == 0 %>
+  <p>You have no pending option proposals!</p>
+<% else %>
+  <div class="personalized-container">
+    <div class="row">
+      <div class="col-md-9" data-wow-duration="1000ms" data-wow-delay="300ms">
+        <div id="calendar"></div>
+      </div>
+      <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms">
+        <% @event_ids.each do |event_id| %>
+          <h2><strong><%= Event.find(event_id).name %></strong></h2>
+          <p>From: <%= EventInvitation.find_by(event_id: event_id, mem_type: "owner").user.name.capitalize %></p>
+          <% i = 0 %>
+          <% Option.where(event_id: event_id, user_id: current_user.id, vote: "pending").each do |option| %>
+            <% i += 1 %>
+            <p><strong>Option <%= i %></strong></p>
+            <p>start: <%= option.start.strftime("%a, %b %d %I:%M %P") %></p>
+            <p>end: <%= option.end.strftime("%a, %b %d %I:%M %P") %></p>
+          <% end %>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('#calendar').fullCalendar(
+    {
+      // put your options and callbacks here
+      header: {
+        left:   'today prev,next',
+        center: 'title',
+        right:  'month,agendaWeek,agendaDay,listWeek'
+      },
+      events: 'events.json',
+      eventRender: function(event, element) { 
+        if (event.user) {
+          element.find('.fc-title').append(" - " + event.user);
+        }
+      },
+      selectable: true,
+      selectHelper: true,
+      dayClick: function(date, jsEvent, view) {
+        if (view.name !== 'month') {
+          return;
+        }
+
+        if (view.name === 'month') {
+          $('#calendar').fullCalendar('changeView', 'agendaDay', {events: 'events.json'});
+          $('#calendar').fullCalendar('gotoDate', date);
+        }
+      }
+    }
+  );
+
+  $('.multiselect').multiselect();
+
+});
+
+</script>
