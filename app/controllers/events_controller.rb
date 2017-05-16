@@ -4,15 +4,12 @@ class EventsController < ApplicationController
   def index
     @pending_events = []
     @accepted_events = []
-    @tentative_events = []
     if current_user
       EventInvitation.where(user_id: current_user.id).each do |invitation|
         if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
           @pending_events << invitation.event
         elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
           @accepted_events << invitation.event
-        elsif invitation.decision == "Tentative" && Event.find(invitation.event_id).status != "cancelled"
-          @tentative_events << invitation.event
         end
       end
     end
@@ -25,7 +22,24 @@ class EventsController < ApplicationController
         @groups << Group.find(invitation.group_id).name
       end
     end
-    render 'new.html.erb'
+
+    if params[:start]
+      @default_start_year = params[:start][11..14].to_i.to_i
+      @default_start_month = DateTime.strptime(params[:start][4..6], "%B").month
+      @default_start_date = params[:start][8..9].to_i
+      @default_start_hour = params[:start][16..17].to_i
+      @default_start_min = params[:start][19..20].to_i
+
+      @default_end_year = params[:end][11..14].to_i
+      @default_end_month = DateTime.strptime(params[:end][4..6], "%B").month
+      @default_end_date = params[:end][8..9].to_i
+      @default_end_hour = params[:end][16..17].to_i
+      @default_end_min = params[:end][19..20].to_i
+    end
+
+    if params[:group]
+      @chosen_group_id = params[:group].to_i
+    end
   end
 
   def create
@@ -36,17 +50,16 @@ class EventsController < ApplicationController
           params["start_date"]["date(1i)"].to_i,
           params["start_date"]["date(2i)"].to_i,
           params["start_date"]["date(3i)"].to_i,
-          params["start_time"]["time(4i)"].to_i,
+          params["start_time"]["time(4i)"].to_i + 4,
           params["start_time"]["time(5i)"].to_i
         ),
         end: DateTime.new(
           params["end_date"]["date(1i)"].to_i,
           params["end_date"]["date(2i)"].to_i,
           params["end_date"]["date(3i)"].to_i,
-          params["end_time"]["time(4i)"].to_i,
+          params["end_time"]["time(4i)"].to_i + 4,
           params["end_time"]["time(5i)"].to_i
         ),
-        # duration: params[:duration],
         location: params[:location],
         status: "sent"
       )
@@ -57,6 +70,8 @@ class EventsController < ApplicationController
         mem_type: "owner",
         decision: "Accept"
       )
+
+      p event_invite
 
       min_duration = (event.end - event.start) / 60
       i = 0
@@ -227,15 +242,11 @@ class EventsController < ApplicationController
     end
     
     # now we need to look through the blocks by member and remove from day_time_options if found
-
     members = []
-    # params[:groups].each do |group|
-      # group.group_invitations.where(decision: "Accept").each do |invitation|
       Group.find_by(name: params[:group_names][0]).group_invitations.where(decision: "Accept").each do |invitation|
-      # Group.find(params[:groups][0].id).group_invitations.where(decision: "Accept").each do |invitation|
         members << User.find(invitation.user_id)
       end
-    # end
+
     members.uniq!
 
     member_blocks = []
@@ -252,6 +263,8 @@ class EventsController < ApplicationController
     end
 
     @available_options = day_time_options.select { |option| option[:available] == true }
+    p '*' * 100
+    p @available_options
     @group_names = params[:group_names]
     @event = Event.find_by(name: params[:event_name])
 
@@ -259,11 +272,6 @@ class EventsController < ApplicationController
   end
 
   def send_options
-    p params[:options]
-    option_array = []
-    params[:options].each do |option|
-    end
-
     event = Event.find_by(name: params[:event_name])
     event.update(
       status: "sent options"
@@ -274,7 +282,6 @@ class EventsController < ApplicationController
       user_array << invitation.user
     end
 
-    # params[:options].each do |option|
     option_test = [
       {
         start_time: DateTime.new(2017, 5, 14, 11),
@@ -285,6 +292,7 @@ class EventsController < ApplicationController
         end_time: DateTime.new(2017, 5, 14, 13)
       }
     ]
+
     option_test.each do |option|
       (user_array - [current_user]).each do |user|
         Option.create(
@@ -295,15 +303,9 @@ class EventsController < ApplicationController
           vote: "pending"
         )
       end
-
-      Option.create(
-        start: option[:start_time],
-        end: option[:end_time],
-        event_id: event.id,
-        user_id: current_user.id,
-        vote: "yes"
-      )
     end
+
+    redirect_to '/events'
   end
 
   def option_proposals
@@ -312,6 +314,67 @@ class EventsController < ApplicationController
   end
 
   def vote_on_options
-    
+    params[:option_ids].each do |option_id|
+      Option.find(option_id).update(vote: "yes")
+    end
+
+    Option.where(user_id: current_user.id, event_id: params[:event_id], vote: "pending").each do |pending_option|
+      pending_option.update(vote: "no")
+    end
+
+    redirect_to '/option_proposals'
+  end
+
+  def option_responses
+    events = []
+    EventInvitation.where(user_id: current_user.id, mem_type: "owner").each do |invite|
+      if Option.find_by(event_id: invite.event_id) && Event.find(invite.event_id).status == "sent options"
+        events << invite.event
+      end
+    end
+
+    @event_options = {}
+
+    events.each do |event|
+      options = {}
+      @event_options[event] = options
+      Option.where(event_id: event.id).select(:start).uniq.each do |option|
+        votes = []
+        full_option = Option.find_by(event_id: event.id, start: option.start)
+        options[full_option] = votes
+        Option.where(event_id: event.id, start: option.start).each do |option_vote|
+          if option_vote.vote == "yes"
+            votes << option_vote.user
+          end
+        end
+      end
+    end
+  end
+
+  def send_final
+    event = Event.find(Option.find(params[:option]).event_id)
+
+    event.update(
+      start: Option.find(params[:option]).start,
+      end: Option.find(params[:option]).end,
+      status: "sent"
+    )
+
+    participants = []
+    GroupInvitation.where(group_id: EventInvitation.find_by(event_id: event.id).group_id, decision: "Accept").each do |invite|
+      participants << invite.user
+    end
+
+    (participants - [current_user]).each do |member|
+      EventInvitation.create(
+        event_id: event.id,
+        group_id: EventInvitation.find_by(event_id: event.id).group_id,
+        user_id: member.id,
+        mem_type: "Participant",
+        decision: "pending"
+      )
+    end
+
+    redirect_to "/events"
   end
 end

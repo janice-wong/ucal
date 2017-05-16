@@ -1,28 +1,32 @@
-<% if Option.where(user_id: current_user.id, vote: "pending").count == 0 %>
-  <p>You have no pending option proposals!</p>
-<% else %>
-  <div class="personalized-container">
-    <div class="row">
-      <div class="col-md-9" data-wow-duration="1000ms" data-wow-delay="300ms">
-        <div id="calendar"></div>
-      </div>
-      <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms">
+<div class="personalized-container">
+  <div class="row">
+    <div class="col-md-8" data-wow-duration="1000ms" data-wow-delay="300ms">
+      <div id="calendar"></div>
+    </div>
+    <div class="col-md-4" data-wow-duration="1000ms" data-wow-delay="300ms">
+      <% if Option.where(user_id: current_user.id, vote: "pending").count == 0 %>
+        <h2>No pending event options</h2>
+      <% else %>
         <% @event_ids.each do |event_id| %>
-          <h2><strong><%= Event.find(event_id).name %></strong></h2>
-          <p>From: <%= EventInvitation.find_by(event_id: event_id, mem_type: "owner").user.name.capitalize %></p>
-          <% i = 0 %>
-          <% Option.where(event_id: event_id, user_id: current_user.id, vote: "pending").each do |option| %>
-            <% i += 1 %>
-            <p><strong>Option <%= i %></strong></p>
-            <p>start: <%= option.start.strftime("%a, %b %d %I:%M %P") %></p>
-            <p>end: <%= option.end.strftime("%a, %b %d %I:%M %P") %></p>
+          <%= form_tag "/option_proposals", method: :post do %>
+            <h2><strong><%= Event.find(event_id).name %></strong></h2>
+            <input type="hidden" name="event_id" value="<%= event_id %>">
+            <p>From: <%= EventInvitation.find_by(event_id: event_id, mem_type: "owner").user.name.capitalize %></p>
+            <% i = 0 %>
+            <p><strong>Options</strong></p>
+            <select class="multiselect" multiple="multiple" name = "option_ids[]">
+              <% Option.where(event_id: event_id, user_id: current_user.id, vote: "pending").each do |time_option| %>
+                <p><option value="<%= time_option.id %>"> <%= time_option.start.strftime("%a, %b %d %I:%M %P")%> - <%= time_option.end.strftime("%a, %b %d %I:%M %P") %></option></p>
+              <% end %>
+            </select>
+            <input type="submit" class="btn btn-success" value="Vote">
+            <hr>
           <% end %>
-          <hr>
         <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
-<% end %>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function() {

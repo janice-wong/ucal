@@ -2,9 +2,6 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get '/signup' => 'users#new'
   post '/users' => 'users#create'
-  # get '/users/:id' => 'users#show' # NTH profile
-  # get '/users/:id/edit' => 'users#edit' # NTH edit profile
-  # patch '/users/:id' => 'users#update' # NTH update profile
   delete '/users/:id' => 'users#destroy'
 
   get '/login' => 'sessions#new'
@@ -23,6 +20,8 @@ Rails.application.routes.draw do
   post '/events/send_options' => 'events#send_options'
   get '/option_proposals' => 'events#option_proposals'
   post '/option_proposals' => 'events#vote_on_options'
+  get '/option_responses' => 'events#option_responses'
+  post '/option_send_final' => 'events#send_final'
   # should option methods be in the option model?
 
   get '/groups' => 'groups#index'
@@ -39,5 +38,11 @@ Rails.application.routes.draw do
   get '/groupinvitations/:id/decline' => 'group_invitations#decline'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
-
+  namespace :api do
+    namespace :v1 do
+      get '/events' => 'events#index'
+      get '/events/:id' => 'events#show'
+      get '/events/group_events/:group_id' => 'events#group_events'
+    end
+  end
 end

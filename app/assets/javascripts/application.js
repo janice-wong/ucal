@@ -11,12 +11,13 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
 //= require bootstrap-sprockets
 //= require bootstrap-multiselect
 //= require bootstrap-select
 //= require bootstrap/alert
 //= require bootstrap/dropdown
 //= require moment 
+//= require bootstrap-datetimepicker
+//= require jquery_ujs
 //= require fullcalendar
 //= require_tree .

@@ -9,26 +9,60 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    $('#calendar').fullCalendar({
-        // put your options and callbacks here
-        header: {
-          left:   'today prev,next',
-          center: 'title',
-          right:  'month,agendaWeek,agendaDay,listWeek'
-        },
-        events: 'events.json',
-        eventRender: function(event, element) { 
-          if (event.user) {
-            element.find('.fc-title').append(" - " + event.user);
-          }
-        },
-        selectable: true,
-        selectHelper: true,
-        select: function() {
-          window.location.href = '/events/new';
-        },
-    });
+  var time = 0;
 
+  $('#calendar').fullCalendar({
+    // put your options and callbacks here
+    customButtons: {
+      addEvent: {
+        text: '+ add',
+        click: function() {
+          if (time) {
+            window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1] + '&group=' + '<%= @group.id %>';
+          } else {
+            window.location.href = '/events/new';
+          }
+        }
+      }
+    },
+    header: {
+      left:   'today prev,next addEvent',
+      center: 'title',
+      right:  'month,agendaWeek,agendaDay,listWeek'
+    },
+    events: '/api/v1/events/group_events/<%= @group.id %>',
+    eventRender: function(event, element) { 
+      if (event.user) {
+        element.find('.fc-title').append(" - " + event.user);
+      // FIGURE OUT BELOW ... BASICALLY OTHER PEOPLE'S CALENDARS SHOULD BE PRIVATE
+      // if (event.user === '<%= current_user %>') {
+      //   element.find('.fc-title').append(" - " + event.user);
+      // } else {
+      //   element.find('').append(event.user);
+      // }
+      }
+    },
+    timezone: 'local',
+    selectable: true,
+    selectHelper: true,
+    dayClick: function(date, jsEvent, view) {
+      if (view.name !== 'month') {
+        return;
+      }
+
+      if (view.name === 'month') {
+        $('#calendar').fullCalendar('changeView', 'agendaDay', {events: 'events.json'});
+        $('#calendar').fullCalendar('gotoDate', date);
+      }
+    },
+    select: function(start, end) {
+      if ((start._d.toString().substring(16,24) !== "20:00:00") && (end._d.toString().substring(16,24) !== "20:00:00")) {
+        time = [start._d, end._d];
+      }
+    }
+  });
 });
+
+
 
 </script>

@@ -1,0 +1,33 @@
+<h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Option Responses</h1>
+<br>
+
+<section id="services">
+  <div class="container">
+    <% @event_options.each do |event_option| %>
+      <div class="row" wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+        <%= form_tag "/option_send_final", method: :post do %>
+          <h4>Who</h4>
+          <p><%= EventInvitation.find_by(event_id: event_option[0].id).group.name %></p>
+          <br>
+          <h4>What</h4>
+          <p><%= event_option[0].name %></p>
+          <br>
+          <h4>Where</h4>
+          <p><%= event_option[0].location %></p>
+          <br>
+          <h4>When - Options</h4>
+          <% event_option[1].each do |option| %>
+            <p><%= option[0].start.strftime("%a, %b %d %I:%M %P") %> - <%= option[0].end.strftime("%a, %b %d %I:%M %P") %></p>
+            <input type="hidden" name="option" value="<%= option[0].id %>">
+            <% option[1].each do |person| %>
+              <p><%= person.name %></p>
+            <% end %>
+            <input type="submit" class="btn btn-success" value="Send Invite(s)">
+          <% end %>
+        <% end %>
+      </div>
+      <hr>
+      <hr>
+    <% end %>
+  </div>
+</section>

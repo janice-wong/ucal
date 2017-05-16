@@ -5,14 +5,11 @@
     </div>
     <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms">
       <% if @pending_events.count > 0 %>
-        <h3>Pending</h3>
+        <h2>Pending Events</h2>
         <% @pending_events.each do |event| %>
-          <p>name: <%= event.name %></p>
-          <p>start: <%= event.friendly_time(event.start) %></p>
-          <p>end: <%= event.friendly_time(event.end) %></p>
-          <p>duration: <%= event.duration %></p>
+          <h4><%= event.name %></h4>
+          <%= event.friendly_time(event.start) %>
           <p>location: <%= event.location %></p>
-          <p>status: <%= event.status %></p>
           <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
             <p><input type="submit" class="btn btn-success" name="decision" value="Accept"></p>
             <p><input type="submit" class="btn btn-warning" name="decision" value="Tentative"></p>
@@ -23,32 +20,19 @@
       <% end %>
 
       <% if @accepted_events.count > 0 %>
-        <h3>Accepted</h3>
+        <h2>Accepted Events</h2>
         <% @accepted_events.each do |event| %>
-          <p>name: <%= event.name %></p>
-          <p>start: <%= event.friendly_time(event.start) %></p>
-          <p>end: <%= event.friendly_time(event.end) %></p>
-          <p>duration: <%= event.duration %></p>
+          <h4><%= event.name %></h4>
+          <% if event.start %>
+            <%= event.friendly_time(event.start) %>
+          <% else %>
+            <p>start: TBD</p>
+          <% end %>
           <p>location: <%= event.location %></p>
-          <p>status: <%= event.status %></p>
           <p><%= button_to 'Show', "events/#{event.id}", {method: :get, class: "btn btn-primary"} %></p>
           <hr>
         <% end %>
       <% end %>
-
-      <% if @tentative_events.count > 0 %>
-        <h3>Tentative</h3>
-        <% @tentative_events.each do |event| %>
-          <p>name: <%= event.name %></p>
-          <p>start: <%= event.friendly_time(event.start) %></p>
-          <p>end: <%= event.friendly_time(event.end) %></p>
-          <p>duration: <%= event.duration %></p>
-          <p>location: <%= event.location %></p>
-          <p>status: <%= event.status %></p>
-          <p><%= button_to 'Show', "events/#{event.id}", {method: :get, class: "btn btn-primary"} %></p>
-          <hr>
-        <% end %>
-      <% end %>   
     </div>
   </div>
 </div>
@@ -56,20 +40,29 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
+  var time = 0;
+
   $('#calendar').fullCalendar(
     {
-      // put your options and callbacks here
+      customButtons: {
+        addEvent: {
+          text: '+ add',
+          click: function() {
+            if (time) {
+              window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1];
+            } else {
+              window.location.href = '/events/new';
+            }
+          }
+        }
+      },
       header: {
-        left:   'today prev,next',
+        left:   'today prev,next addEvent',
         center: 'title',
         right:  'month,agendaWeek,agendaDay,listWeek'
       },
-      events: 'events.json',
-      eventRender: function(event, element) { 
-        if (event.user) {
-          element.find('.fc-title').append(" - " + event.user);
-        }
-      },
+      events: '/api/v1/events',
+      timezone: 'local',
       selectable: true,
       selectHelper: true,
       dayClick: function(date, jsEvent, view) {
@@ -81,10 +74,14 @@ $(document).ready(function() {
           $('#calendar').fullCalendar('changeView', 'agendaDay', {events: 'events.json'});
           $('#calendar').fullCalendar('gotoDate', date);
         }
+      },
+      select: function(start, end) {
+        if ((start._d.toString().substring(16,24) !== "20:00:00") && (end._d.toString().substring(16,24) !== "20:00:00")) {
+          time = [start._d, end._d];
+        }
       }
     }
   );
 });
 
 </script>
-

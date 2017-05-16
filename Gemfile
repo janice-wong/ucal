@@ -9,10 +9,12 @@ end
 gem 'rails', '~> 5.0.2'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'fullcalendar-rails'
-gem 'momentjs-rails'
+gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap-multiselect-rails'
 gem 'bootstrap-select-rails'
 gem 'jquery-timepicker-rails'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
+gem 'unirest'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server

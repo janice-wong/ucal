@@ -20,9 +20,7 @@
         <h4>Options</h4>
         <select class="multiselect" multiple="multiple", name = "options[]">
           <% @available_options.each do |available_option| %>
-          <p><option value="<%= [
-            Time.strptime(available_option[:start].first, "%a, %b %d %I:%M %P"), 
-            Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes] %>"><%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %></option></p>
+          <p><option value="<%= available_option %>"><%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %></option></p>
           <% end %>
         </select>
         <br>
