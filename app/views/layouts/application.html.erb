@@ -41,7 +41,7 @@
               <% if current_user %>
                 <li class="active"><a>Today is <%= Date.today.strftime("%A, %b %e") %></a></li>
                 <li><a href="/events">Home</a></li>
-                <li class="dropdown"><a>Events (<%= EventInvitation.where(user_id: current_user.id, decision: "pending").count + Option.where(user_id: current_user.id, vote: "pending").count %>) <i class="fa fa-angle-down"></i></a>
+                <li class="dropdown"><a>Events (CODE THIS) <i class="fa fa-angle-down"></i></a>
                     <ul role="menu" class="sub-menu">
                       <li><a href="/events/new">Add Event</a></li>
                       <li><a href="/option_proposals">Event Options</a></li>

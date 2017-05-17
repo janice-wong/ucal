@@ -18,9 +18,10 @@
         <p><%= @event.location %></p>
         <br>
         <h4>Options</h4>
+        <input type="hidden" name="min" value="<%= @min %>">
         <select class="multiselect" multiple="multiple", name = "options[]">
-          <% @available_options.each do |available_option| %>
-          <p><option value="<%= available_option %>"><%= available_option[:start].first %> - <%= (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P") %></option></p>
+          <% @options.each do |option| %>
+            <p><option value="<%= option[0] %>"><%= option[0] %> - <%= option[1][13..20] %></option></p>
           <% end %>
         </select>
         <br>

@@ -1,19 +1,18 @@
 class SessionsController < ApplicationController
   def new
+    if params[:login] == "failure"
+      @login_failure = "Wrong email / password. Please try again."
+    end
     render 'login.html.erb'
   end
 
   def create
     user = User.find_by(email: params[:email])
-    p user
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      p "LOGGED IN"
-      redirect_to '/events'
+      redirect_to '/events?login=success'
     else
-      flash[:warning] = "Invalid email or password"
-      p "INVALID"
-      redirect_to '/login'
+      redirect_to '/login?login=failure'
     end
   end
 

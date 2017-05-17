@@ -4,7 +4,7 @@
       <div id="calendar"></div>
     </div>
     <div class="col-md-4" data-wow-duration="1000ms" data-wow-delay="300ms">
-      <% if Option.where(user_id: current_user.id, vote: "pending").count == 0 %>
+      <% if @event_ids.count == 0 %>
         <h2>No pending event options</h2>
       <% else %>
         <% @event_ids.each do |event_id| %>
@@ -12,11 +12,12 @@
             <h2><strong><%= Event.find(event_id).name %></strong></h2>
             <input type="hidden" name="event_id" value="<%= event_id %>">
             <p>From: <%= EventInvitation.find_by(event_id: event_id, mem_type: "owner").user.name.capitalize %></p>
+            <p>Location: <%= Event.find(event_id).location %> </p>
             <% i = 0 %>
             <p><strong>Options</strong></p>
             <select class="multiselect" multiple="multiple" name = "option_ids[]">
               <% Option.where(event_id: event_id, user_id: current_user.id, vote: "pending").each do |time_option| %>
-                <p><option value="<%= time_option.id %>"> <%= time_option.start.strftime("%a, %b %d %I:%M %P")%> - <%= time_option.end.strftime("%a, %b %d %I:%M %P") %></option></p>
+                <p><option value="<%= time_option.id %>"> <%= time_option.start.strftime("%a, %b %d %I:%M %P")%> - <%= time_option.end.strftime("%I:%M %P") %></option></p>
               <% end %>
             </select>
             <input type="submit" class="btn btn-success" value="Vote">
@@ -31,20 +32,16 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
+  $('.multiselect').multiselect({buttonWidth: '350px'});
+
   $('#calendar').fullCalendar(
     {
-      // put your options and callbacks here
       header: {
-        left:   'today prev,next',
+        left:   'today prev,next addEvent',
         center: 'title',
         right:  'month,agendaWeek,agendaDay,listWeek'
       },
-      events: 'events.json',
-      eventRender: function(event, element) { 
-        if (event.user) {
-          element.find('.fc-title').append(" - " + event.user);
-        }
-      },
+      events: '/api/v1/events',
       selectable: true,
       selectHelper: true,
       dayClick: function(date, jsEvent, view) {
@@ -59,9 +56,6 @@ $(document).ready(function() {
       }
     }
   );
-
-  $('.multiselect').multiselect();
-
 });
 
 </script>

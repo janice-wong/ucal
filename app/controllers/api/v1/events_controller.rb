@@ -17,11 +17,17 @@ class Api::V1::EventsController < ApplicationController
   end
 
   def group_events
-    @group = Group.find(params[:group_id])
+    users = []
+    GroupInvitation.where(group_id: params[:group_id], decision: "Accept").each do |invitation|
+      users << invitation.user
+    end
+
     @invitations = []
-    EventInvitation.where(group_id: @group.id, decision: "Accept").each do |invite|
-      if Event.find(invite.event_id).status == "sent"
-        @invitations << invite
+    users.each do |user|
+      EventInvitation.where(user_id: user.id, decision: "Accept"). each do |invite|
+        if Event.find(invite.event_id).status == "sent"
+          @invitations << invite
+        end
       end
     end
     render 'group_events.json.jbuilder'

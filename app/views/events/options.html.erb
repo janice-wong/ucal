@@ -1,45 +1,113 @@
-<%= form_tag "/events/options", method: :post do %>
-  <p>
-    Who:
-    <% @group_names.each do |group_name| %>
-      <%= group_name %>
-      <input type="hidden" name="group_names[]" value="<%= group_name %>">
-    <% end %>
-  </p>
-  <p>What: <%= @event.name %></p>
-  <p>Location: <%= @event.location %></p>
-  <input type="hidden" name="event_name" value="<%= @event.name %>">
-  <p>
-    Day(s): 
-    <select class="selectpicker" name="days[]">
-      <option>Sunday</option>
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-    </select>
-  </p>
-  <br>
+<section id="services">
+  <div class="container">
+    <div class="row" wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
+      <%= form_tag "/events/options", method: :post do %>
+        <h4>Who</h4>
+        <% @group_names.each do |group_name| %>
+          <%= group_name %>
+          <input type="hidden" name="group_names[]" value="<%= group_name %>">
+        <% end %>
+        <br>
+        <br>
+        <h4>What</h4>
+        <p><%= @event.name %></p>
+        <br>
+        <h4>Where</h4>
+        <p><%= @event.location %></p>
+        <input type="hidden" name="event_name" value="<%= @event.name %>">
+        <br>
+        <h4>When</h4>
+        <p>
+          Day(s): 
+          <select class="selectpicker" name="days[]">
+            <option>Sunday</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+          </select>
+        </p>
+        <p>Dates</p>
+          <div class="row">
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker4'>
+                          <input type='text' class="form-control" name="start_date">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker5'>
+                          <input type='text' class="form-control" name="end_date">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <p>Times</p>
+          <div class="row">
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker2'>
+                          <input type='text' class="form-control" name="start_time">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker3'>
+                          <input type='text' class="form-control" name="end_time">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <br>
 
-  <p>Dates</p>
-    <p><%= date_select :start_date,  :date, order: [:month, :day, :year] %> - <%= date_select :end_date, :date, order: [:month, :day, :year] %></p>
-  <br>
+        <p>Duration: 
+          <input type="text" name="duration">
+          <select class="selectpicker", name = "duration_unit">
+            <option value="hr">hr(s)</option>
+            <option value="min">min</option>
+          </select>
+        </p>
+        <br>
 
-  <p>Times</p>
-    <p><%= time_select :start_time, :time, ampm: true, minute_step: 15 %> - <%= time_select :end_time, :time, ampm: true, minute_step: 15 %></p>
-  <br>
+        <button class="btn btn-primary">Submit</button>
 
-  <p>Duration: 
-    <input type="text" name="duration">
-    <select class="selectpicker", name = "duration_unit">
-      <option value="min">min</option>
-      <option value="hr">hr(s)</option>
-    </select>
-  </p>
-  <br>
+      <% end %>
 
-  <button class="btn btn-primary">Submit</button>
 
-<% end %>
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('#datetimepicker4').datetimepicker({
+    format: 'MM/DD/YYYY'
+  });
+  $('#datetimepicker5').datetimepicker({
+    format: 'MM/DD/YYYY'
+  });
+  $('#datetimepicker2').datetimepicker({
+    format: 'LT',
+    stepping: 15
+  });
+  $('#datetimepicker3').datetimepicker({
+    format: 'LT',
+    stepping: 15
+  });
+
+});
+</script>

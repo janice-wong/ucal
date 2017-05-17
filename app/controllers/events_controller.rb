@@ -2,6 +2,9 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
   
   def index
+    if params[:login] == "success"
+      @login_success = "Successfully logged in!"
+    end
     @pending_events = []
     @accepted_events = []
     if current_user
@@ -46,20 +49,8 @@ class EventsController < ApplicationController
     if params[:submit] == "create"
       event = Event.create(
         name: params[:name],
-        start: DateTime.new(
-          params["start_date"]["date(1i)"].to_i,
-          params["start_date"]["date(2i)"].to_i,
-          params["start_date"]["date(3i)"].to_i,
-          params["start_time"]["time(4i)"].to_i + 4,
-          params["start_time"]["time(5i)"].to_i
-        ),
-        end: DateTime.new(
-          params["end_date"]["date(1i)"].to_i,
-          params["end_date"]["date(2i)"].to_i,
-          params["end_date"]["date(3i)"].to_i,
-          params["end_time"]["time(4i)"].to_i + 4,
-          params["end_time"]["time(5i)"].to_i
-        ),
+        start: DateTime.strptime(params[:start], "%m/%d/%Y %l:%M %p"),
+        end: DateTime.strptime(params[:end], "%m/%d/%Y %l:%M %p"),
         location: params[:location],
         status: "sent"
       )
@@ -143,6 +134,7 @@ class EventsController < ApplicationController
     render 'edit.html.erb'
   end
 
+# need to build this out
   def update
     @event = Event.find(params[:id])
     @event.update(
@@ -169,15 +161,15 @@ class EventsController < ApplicationController
     day_to_num = {"Sunday" => 0, "Monday" => 1, "Tuesday" => 2, "Wednesday" => 3, "Thursday" => 4, "Friday" => 5, "Saturday" => 6}
 
     start_date = Date.new(
-      params["start_date"]["date(1i)"].to_i,
-      params["start_date"]["date(2i)"].to_i,
-      params["start_date"]["date(3i)"].to_i
+      params["start_date"][6..9].to_i,
+      params["start_date"][0..1].to_i,
+      params["start_date"][3..4].to_i
     )
 
     end_date = Date.new(
-      params["end_date"]["date(1i)"].to_i,
-      params["end_date"]["date(2i)"].to_i,
-      params["end_date"]["date(3i)"].to_i
+      params["end_date"][6..9].to_i,
+      params["end_date"][0..1].to_i,
+      params["end_date"][3..4].to_i
     )
 
     my_days = []
@@ -186,30 +178,36 @@ class EventsController < ApplicationController
     end
     day_options = (start_date..end_date).to_a.select { |k| my_days.include?(k.wday) }
     
+    start_hr = Time.strptime(params["start_time"], "%l:%M %p").strftime("%H:%M")[0..1]
+    start_min = Time.strptime(params["start_time"], "%l:%M %p").strftime("%H:%M")[3..4]
+
+    end_hr = Time.strptime(params["end_time"], "%l:%M %p").strftime("%H:%M")[0..1]
+    end_min = Time.strptime(params["end_time"], "%l:%M %p").strftime("%H:%M")[3..4]
+
     start_time = Time.new(
-      params["start_date"]["date(1i)"].to_i,
-      params["start_date"]["date(2i)"].to_i,
-      params["start_date"]["date(3i)"].to_i,
-      params["start_time"]["time(4i)"].to_i,
-      params["start_time"]["time(5i)"].to_i
+      params["start_date"][6..9].to_i,
+      params["start_date"][0..1].to_i,
+      params["start_date"][3..4].to_i,
+      start_hr,
+      start_min
     )
 
     end_time = Time.new(
-      params["start_date"]["date(1i)"].to_i,
-      params["start_date"]["date(2i)"].to_i,
-      params["start_date"]["date(3i)"].to_i,
-      params["end_time"]["time(4i)"].to_i,
-      params["end_time"]["time(5i)"].to_i
+      params["start_date"][6..9].to_i,
+      params["start_date"][0..1].to_i,
+      params["start_date"][3..4].to_i,
+      end_hr,
+      end_min
     )
     range = (end_time - start_time) / 60
 
     if params[:duration_unit] == "min"
-      min = params[:duration].to_i
+      @min = params[:duration].to_i
     else
-      min = (params[:duration].to_i * 60).to_i
+      @min = (params[:duration].to_i * 60).to_i
     end
     
-    count = ((range - min) / 15) + 1
+    count = ((range - @min) / 15) + 1
     
     # day_time_options is an array of all available options
     day_time_options = []
@@ -225,7 +223,7 @@ class EventsController < ApplicationController
       (count.to_i).times do
         option = []
         i = 0
-        (min / 15).times do
+        (@min / 15).times do
           option << (start_time + i.minutes).strftime("%a, %b %d %I:%M %P")
           i += 15
         end
@@ -240,7 +238,7 @@ class EventsController < ApplicationController
         start_time += 15.minutes
       end
     end
-    
+
     # now we need to look through the blocks by member and remove from day_time_options if found
     members = []
       Group.find_by(name: params[:group_names][0]).group_invitations.where(decision: "Accept").each do |invitation|
@@ -263,11 +261,14 @@ class EventsController < ApplicationController
     end
 
     @available_options = day_time_options.select { |option| option[:available] == true }
-    p '*' * 100
-    p @available_options
     @group_names = params[:group_names]
     @event = Event.find_by(name: params[:event_name])
 
+    @options = []
+    @available_options.each do |available_option|
+      @options << [available_option[:start].first, (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P")]
+    end
+    
     render 'presented_options.html.erb'
   end
 
@@ -282,18 +283,21 @@ class EventsController < ApplicationController
       user_array << invitation.user
     end
 
-    option_test = [
-      {
-        start_time: DateTime.new(2017, 5, 14, 11),
-        end_time: DateTime.new(2017, 5, 14, 12)
-      },
-      {
-        start_time: DateTime.new(2017, 5, 14, 12),
-        end_time: DateTime.new(2017, 5, 14, 13)
-      }
-    ]
+    p '-' * 100
+    p params[:options]
 
-    option_test.each do |option|
+    option_array = []
+    min = params[:min].to_i
+
+    params[:options].each do |option|
+      start = Time.strptime(option, "%a, %b %d %I:%M %p") - 4.hours
+      option_array << {
+        :start_time => start,
+        :end_time => start + min.minutes
+      }
+    end
+
+    option_array.each do |option|
       (user_array - [current_user]).each do |user|
         Option.create(
           start: option[:start_time],
@@ -310,6 +314,11 @@ class EventsController < ApplicationController
 
   def option_proposals
     @event_ids = Option.where(user_id: current_user.id, vote: "pending").distinct.pluck(:event_id)
+    @event_ids.each do |event_id|
+      if Event.find(event_id).status == "sent"
+        @event_ids.delete(event_id)
+      end
+    end
     render 'option_proposals.html.erb'
   end
 

@@ -77,11 +77,12 @@ class GroupsController < ApplicationController
 
   def events
     @group = Group.find(params[:group_id])
-    @invitations = []
-    EventInvitation.where(group_id: @group.id, decision: "Accept").each do |invite|
-      if Event.find(invite.event_id).status == "sent"
-        @invitations << invite
+    @events = []
+    EventInvitation.where(group_id: @group.id).distinct.pluck(:event_id).each do |event_id|
+      if Event.find(event_id).status == "sent"
+        @events << Event.find(event_id)
       end
     end
+
   end
 end

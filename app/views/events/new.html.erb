@@ -25,11 +25,51 @@
         <br>
         <h4>When</h4>
         <% if params[:start] %>
-          <p>Start: <%= date_select :start_date,  :date, order: [:month, :day, :year], selected: Date.new(@default_start_year, @default_start_month, @default_start_date) %> - <%= time_select :start_time, :time, ampm: true, minute_step: 15, selected: DateTime.new(@default_start_year, @default_start_month, @default_start_date, @default_start_hour, @default_start_min) %></p>
-          <p>End: <%= date_select :end_date, :date, order: [:month, :day, :year], selected: Date.new(@default_end_year, @default_end_month, @default_end_date) %> - <%= time_select :end_time, :time, ampm: true, minute_step: 15, selected: DateTime.new(@default_end_year, @default_end_month, @default_end_date, @default_end_hour, @default_end_min) %></p>
+          <div class="row">
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker4'>
+                          <input type='text' class="form-control" name="start">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker5'>
+                          <input type='text' class="form-control" name="end">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </div>
         <% else %>
-          <p>Start: <%= date_select :start_date,  :date, order: [:month, :day, :year] %> - <%= time_select :start_time, :time, ampm: true, minute_step: 15 %></p>
-          <p>End: <%= date_select :end_date, :date, order: [:month, :day, :year] %> - <%= time_select :end_time, :time, ampm: true, minute_step: 15 %></p>
+          <div class="row">
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker6'>
+                          <input type='text' class="form-control" name="start">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              <div class='col-md-4'>
+                  <div class="form-group">
+                      <div class='input-group date' id='datetimepicker7'>
+                          <input type='text' class="form-control" name="end">
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </div>
         <% end %>
         <br>
         <button class="btn btn-success" type="submit" name="submit" value="create">Create</button>
@@ -40,29 +80,61 @@
   </div>
 </section>
 
-<div class="container">
-    <div class="row">
-        <div class='col-sm-6'>
-        <%= form_tag "/", method: :post do %>
-            <input type='text' name="start" class="form-control" id='datetimepicker4' />
-            <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        <% end %>
-        </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker4').datetimepicker({
-                  stepping: 15
-                });
-            });
-        </script>
-    </div>
-</div>
 
 <script type="text/javascript">
 $(document).ready(function() {
 
+  Date.prototype.addHours = function(h) {    
+    this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+    return this;   
+  };
+
+  var defaultStartYear = '<%= @default_start_year %>';
+  var defaultStartMonth = '<%= @default_start_month %>';
+  var defaultStartDate = '<%= @default_start_date %>';
+  var defaultStartHour = '<%= @default_start_hour %>';
+  var defaultStartMin = '<%= @default_start_min %>';
+
+  var defaultEndYear = '<%= @default_end_year %>';
+  var defaultEndMonth = '<%= @default_end_month %>';
+  var defaultEndDate = '<%= @default_end_date %>';
+  var defaultEndHour = '<%= @default_end_hour %>';
+  var defaultEndMin = '<%= @default_end_min %>';
+
+  if (defaultStartMonth === 1) {
+    defaultStartMonth = 12;
+  } else {
+    defaultStartMonth -= 1;
+  }
+
+  if (defaultEndMonth === 1) {
+    defaultEndMonth = 12;
+  } else {
+    defaultEndMonth -= 1;
+  }
+
   $('.multiselect').multiselect();
-  
+  $('#datetimepicker4').datetimepicker({
+    defaultDate: new Date(defaultStartYear, defaultStartMonth, defaultStartDate, defaultStartHour, defaultStartMin).addHours(4),
+    stepping: 15
+  });
+  $('#datetimepicker5').datetimepicker({
+    defaultDate: new Date(defaultEndYear, defaultEndMonth, defaultEndDate, defaultEndHour, defaultEndMin).addHours(4),
+    stepping: 15
+  });
+  $('#datetimepicker6').datetimepicker({
+    defaultDate: new Date(),
+    stepping: 15
+  });
+  $('#datetimepicker7').datetimepicker({
+    stepping: 15
+  });
+  $("#datetimepicker6").on("dp.change", function (e) {
+      $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+  });
+  $("#datetimepicker7").on("dp.change", function (e) {
+      $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+  });
+
 });
 </script>

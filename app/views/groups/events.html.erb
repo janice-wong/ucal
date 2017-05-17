@@ -3,6 +3,23 @@
     <div class="col-md-9" data-wow-duration="1000ms" data-wow-delay="300ms">
       <div id="calendar"></div>
     </div>
+    <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms" id="contained">
+    <% @events.each do |event| %>
+      <div class="well" id="customized-well">
+        <% if EventInvitation.find_by(event_id: event.id, user_id: current_user.id).mem_type == "owner" %>
+          <h4><a href="/events/<%= event.id %>"><%= event.name %></a></h4>
+        <% else %>
+          <h4><%= event.name %></h4>
+        <% end %>
+        <% if event.start %>
+          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
+        <% else %>
+          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> TBD</p>
+        <% end %>
+        <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
+      </div>
+    <% end %>
+    </div>
   </div>
 </div>
 
@@ -11,56 +28,56 @@ $(document).ready(function() {
 
   var time = 0;
 
-  $('#calendar').fullCalendar({
-    // put your options and callbacks here
-    customButtons: {
-      addEvent: {
-        text: '+ add',
-        click: function() {
-          if (time) {
-            window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1] + '&group=' + '<%= @group.id %>';
-          } else {
-            window.location.href = '/events/new';
+  $('#calendar').fullCalendar(
+    {
+      customButtons: {
+        addEvent: {
+          text: '+ add',
+          click: function() {
+            if (time) {
+              window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1] + '&group=' + '<%= @group.id %>';
+            } else {
+              window.location.href = '/events/new';
+            }
           }
         }
-      }
-    },
-    header: {
-      left:   'today prev,next addEvent',
-      center: 'title',
-      right:  'month,agendaWeek,agendaDay,listWeek'
-    },
-    events: '/api/v1/events/group_events/<%= @group.id %>',
-    eventRender: function(event, element) { 
-      if (event.user) {
-        element.find('.fc-title').append(" - " + event.user);
-      // FIGURE OUT BELOW ... BASICALLY OTHER PEOPLE'S CALENDARS SHOULD BE PRIVATE
-      // if (event.user === '<%= current_user %>') {
-      //   element.find('.fc-title').append(" - " + event.user);
-      // } else {
-      //   element.find('').append(event.user);
-      // }
-      }
-    },
-    timezone: 'local',
-    selectable: true,
-    selectHelper: true,
-    dayClick: function(date, jsEvent, view) {
-      if (view.name !== 'month') {
-        return;
-      }
+      },
+      header: {
+        left:   'today prev,next addEvent',
+        center: 'title',
+        right:  'month,agendaWeek,agendaDay,listWeek'
+      },
+      events: '/api/v1/events/group_events/<%= @group.id %>',
+      eventRender: function(event, element) { 
+        if (event.user) {
+          element.find('.fc-title').append(" - " + event.user);
+        // FIGURE OUT BELOW ... BASICALLY OTHER PEOPLE'S CALENDARS SHOULD BE PRIVATE
+        // if (event.user === '<%= current_user %>') {
+        //   element.find('.fc-title').append(" - " + event.user);
+        // } else {
+        //   element.find('').append(event.user);
+        // }
+        }
+      },
+      selectable: true,
+      selectHelper: true,
+      dayClick: function(date, jsEvent, view) {
+        if (view.name !== 'month') {
+          return;
+        }
 
-      if (view.name === 'month') {
-        $('#calendar').fullCalendar('changeView', 'agendaDay', {events: 'events.json'});
-        $('#calendar').fullCalendar('gotoDate', date);
-      }
-    },
-    select: function(start, end) {
-      if ((start._d.toString().substring(16,24) !== "20:00:00") && (end._d.toString().substring(16,24) !== "20:00:00")) {
-        time = [start._d, end._d];
+        if (view.name === 'month') {
+          $('#calendar').fullCalendar('changeView', 'agendaDay', {events: 'events.json'});
+          $('#calendar').fullCalendar('gotoDate', date);
+        }
+      },
+      select: function(start, end) {
+        if ((start._d.toString().substring(16,24) !== "20:00:00") && (end._d.toString().substring(16,24) !== "20:00:00")) {
+          time = [start._d, end._d];
+        }
       }
     }
-  });
+  );
 });
 
 

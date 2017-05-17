@@ -1,36 +1,49 @@
+<% if @login_success %>
+  <div class="col-md-12">
+    <div class="alert alert-success fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><%= @login_success %></h4>
+    </div>
+  </div>
+<% end %>
+
 <div class="personalized-container">
   <div class="row">
     <div class="col-md-9" data-wow-duration="1000ms" data-wow-delay="300ms">
       <div id="calendar"></div>
     </div>
-    <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms">
+    <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms" id="contained">
       <% if @pending_events.count > 0 %>
-        <h2>Pending Events</h2>
+        <h2><strong>Pending Events</strong></h2>
         <% @pending_events.each do |event| %>
           <h4><%= event.name %></h4>
-          <%= event.friendly_time(event.start) %>
-          <p>location: <%= event.location %></p>
+          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
+          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
           <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
-            <p><input type="submit" class="btn btn-success" name="decision" value="Accept"></p>
-            <p><input type="submit" class="btn btn-warning" name="decision" value="Tentative"></p>
-            <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+            <p><input type="submit" class="btn btn-success" name="decision" value="Accept">
+            <input type="submit" class="btn btn-warning" name="decision" value="Tentative">
+            <input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
           <% end %>
           <hr>
         <% end %>
       <% end %>
 
       <% if @accepted_events.count > 0 %>
-        <h2>Accepted Events</h2>
+        <h2><strong>Accepted Events</strong></h2>
         <% @accepted_events.each do |event| %>
-          <h4><%= event.name %></h4>
-          <% if event.start %>
-            <%= event.friendly_time(event.start) %>
+        <div class="well" id="customized-well">
+          <% if EventInvitation.find_by(event_id: event.id, user_id: current_user.id).mem_type == "owner" %>
+            <h4><a href="/events/<%= event.id %>"><%= event.name %></a></h4>
           <% else %>
-            <p>start: TBD</p>
+            <h4><%= event.name %></h4>
           <% end %>
-          <p>location: <%= event.location %></p>
-          <p><%= button_to 'Show', "events/#{event.id}", {method: :get, class: "btn btn-primary"} %></p>
-          <hr>
+          <% if event.start %>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
+          <% else %>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> TBD</p>
+          <% end %>
+          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
+        </div>
         <% end %>
       <% end %>
     </div>
@@ -62,7 +75,6 @@ $(document).ready(function() {
         right:  'month,agendaWeek,agendaDay,listWeek'
       },
       events: '/api/v1/events',
-      timezone: 'local',
       selectable: true,
       selectHelper: true,
       dayClick: function(date, jsEvent, view) {

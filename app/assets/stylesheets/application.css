@@ -20,3 +20,13 @@
 .personalized-container {
   padding-left: 64px;
 }
+
+#customized-well {
+  width: 250px;
+  padding: 0px 10px 0px 10px;
+}
+
+#contained {
+  height: 780px;
+  overflow: scroll;
+}
