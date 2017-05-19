@@ -45,7 +45,7 @@ class GroupsController < ApplicationController
         @twilio_client.account.sms.messages.create(
           :from => "+1#{ENV["twilio_phone_number"]}",
           :to => "+1#{User.find_by(name: friend).phone}",
-          :body => "Hi #{friend}!#{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with ACCEPT or DECLINE"
+          :body => "Hi #{friend}!#{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with group name - ACCEPT or DECLINE"
         )
       end
     end

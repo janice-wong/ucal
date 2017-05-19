@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   get '/groupinvitations/:id/decline' => 'group_invitations#decline'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
-  get '/twilio/process_sms' => 'texts#process_sms'
+  get '/twilio/process_group_response' => 'texts#process_group_response'
 
   namespace :api do
     namespace :v1 do

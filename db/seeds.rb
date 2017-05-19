@@ -1,3 +1,5 @@
+rails db:reset
+
 Block.create!([
   {user_id: 5, start: "2017-05-20 12:00:00"},
   {user_id: 5, start: "2017-05-20 12:15:00"},
@@ -98,17 +100,47 @@ Block.create!([
   {user_id: 8, start: "2017-05-20 20:00:00"},
   {user_id: 8, start: "2017-05-20 20:15:00"},
   {user_id: 8, start: "2017-05-20 20:30:00"},
-  {user_id: 8, start: "2017-05-20 20:45:00"}
+  {user_id: 8, start: "2017-05-20 20:45:00"},
+  {user_id: 5, start: "2017-06-03 12:00:00"},
+  {user_id: 5, start: "2017-06-03 12:15:00"},
+  {user_id: 5, start: "2017-06-03 12:30:00"},
+  {user_id: 5, start: "2017-06-03 12:45:00"},
+  {user_id: 5, start: "2017-06-03 13:00:00"},
+  {user_id: 5, start: "2017-06-03 13:15:00"},
+  {user_id: 5, start: "2017-06-03 13:30:00"},
+  {user_id: 5, start: "2017-06-03 13:45:00"},
+  {user_id: 7, start: "2017-06-11 10:00:00"},
+  {user_id: 7, start: "2017-06-11 10:15:00"},
+  {user_id: 7, start: "2017-06-11 10:30:00"},
+  {user_id: 7, start: "2017-06-11 10:45:00"},
+  {user_id: 7, start: "2017-06-09 19:00:00"},
+  {user_id: 7, start: "2017-06-09 19:15:00"},
+  {user_id: 7, start: "2017-06-09 19:30:00"},
+  {user_id: 7, start: "2017-06-09 19:45:00"},
+  {user_id: 7, start: "2017-06-09 20:00:00"},
+  {user_id: 7, start: "2017-06-09 20:15:00"},
+  {user_id: 7, start: "2017-06-09 20:30:00"},
+  {user_id: 7, start: "2017-06-09 20:45:00"},
+  {user_id: 5, start: "2017-05-26 20:30:00"},
+  {user_id: 5, start: "2017-05-26 20:45:00"},
+  {user_id: 5, start: "2017-05-26 21:00:00"},
+  {user_id: 5, start: "2017-05-26 21:15:00"},
+  {user_id: 5, start: "2017-05-26 21:30:00"},
+  {user_id: 5, start: "2017-05-26 21:45:00"}
 ])
 Event.create!([
-  {name: "Me, myself, and I", duration: nil, location: "Mi Casa", status: "sent", start: "2017-05-20 12:00:00", end: "2017-05-20 16:00:00"},
-  {name: "Lunch", duration: nil, location: "TBD", status: "sent", start: "2017-05-18 11:00:00", end: "2017-05-18 13:00:00"},
-  {name: "Janice's Capstone!", duration: nil, location: "Union Square", status: "sent", start: "2017-05-25 18:00:00", end: "2017-05-25 19:00:00"},
-  {name: "Dancehall", duration: nil, location: "", status: nil, start: nil, end: nil},
-  {name: "Second Lunch", duration: nil, location: "Public", status: "sent", start: "2017-05-25 19:00:00", end: "2017-05-25 20:00:00"},
-  {name: "Real Second Lunch", duration: nil, location: "Public", status: "sent", start: "2017-05-25 14:30:00", end: "2017-05-25 15:30:00"},
-  {name: "dranks", duration: nil, location: "", status: "sent", start: "2017-05-20 16:00:00", end: "2017-05-20 21:00:00"},
-  {name: "real dranks", duration: nil, location: "", status: "sent", start: "2017-05-19 18:00:00", end: "2017-05-19 20:00:00"}
+  {name: "Me, myself, and I", location: "Mi Casa", status: "sent", start: "2017-05-20 12:00:00", end: "2017-05-20 16:00:00"},
+  {name: "Lunch", location: "TBD", status: "sent", start: "2017-05-18 11:00:00", end: "2017-05-18 13:00:00"},
+  {name: "Janice's Capstone!", location: "Union Square", status: "sent", start: "2017-05-25 18:00:00", end: "2017-05-25 19:00:00"},
+  {name: "Dancehall", location: "", status: nil, start: nil, end: nil},
+  {name: "Second Lunch", location: "Public", status: "sent", start: "2017-05-25 19:00:00", end: "2017-05-25 20:00:00"},
+  {name: "Real Second Lunch", location: "Public", status: "sent", start: "2017-05-25 14:30:00", end: "2017-05-25 15:30:00"},
+  {name: "dranks", location: "", status: "sent", start: "2017-05-20 16:00:00", end: "2017-05-20 21:00:00"},
+  {name: "real dranks", location: "", status: "sent", start: "2017-05-19 18:00:00", end: "2017-05-19 20:00:00"},
+  {name: "Basic Brunch", location: "Ruby's", status: "sent", start: "2017-06-03 12:00:00", end: "2017-06-03 14:00:00"},
+  {name: "bfast", location: "Ruby's", status: "sent", start: "2017-06-11 10:00:00", end: "2017-06-11 11:00:00"},
+  {name: "dindin", location: "Public", status: "sent", start: "2017-06-09 19:00:00", end: "2017-06-09 21:00:00"},
+  {name: "biergarten(sp?)", location: "you know where", status: "sent", start: "2017-05-26 20:30:00", end: "2017-05-26 22:00:00"}
 ])
 EventInvitation.create!([
   {event_id: 107, group_id: nil, user_id: 5, mem_type: "owner", decision: "Accept"},
@@ -133,7 +165,19 @@ EventInvitation.create!([
   {event_id: 116, group_id: 15, user_id: 5, mem_type: "owner", decision: "Accept"},
   {event_id: 116, group_id: 15, user_id: 7, mem_type: "Participant", decision: "pending"},
   {event_id: 116, group_id: 15, user_id: 8, mem_type: "Participant", decision: "Accept"},
-  {event_id: 115, group_id: 15, user_id: 8, mem_type: "Participant", decision: "Accept"}
+  {event_id: 115, group_id: 15, user_id: 8, mem_type: "Participant", decision: "Accept"},
+  {event_id: 117, group_id: 15, user_id: 5, mem_type: "owner", decision: "Accept"},
+  {event_id: 117, group_id: 15, user_id: 7, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 117, group_id: 15, user_id: 8, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 118, group_id: 15, user_id: 7, mem_type: "owner", decision: "Accept"},
+  {event_id: 118, group_id: 15, user_id: 5, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 118, group_id: 15, user_id: 8, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 119, group_id: 15, user_id: 7, mem_type: "owner", decision: "Accept"},
+  {event_id: 119, group_id: 15, user_id: 5, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 119, group_id: 15, user_id: 8, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 120, group_id: 32, user_id: 5, mem_type: "owner", decision: "Accept"},
+  {event_id: 120, group_id: 32, user_id: 20, mem_type: "Partcipant", decision: "pending"},
+  {event_id: 120, group_id: 32, user_id: 18, mem_type: "Partcipant", decision: "pending"}
 ])
 Friendship.create!([
   {user_id: 5, friend_id: 6},
@@ -148,14 +192,24 @@ Friendship.create!([
   {user_id: 9, friend_id: 10},
   {user_id: 9, friend_id: 11},
   {user_id: 8, friend_id: 12},
-  {user_id: 8, friend_id: 13}
+  {user_id: 8, friend_id: 13},
+  {user_id: 16, friend_id: 5},
+  {user_id: 17, friend_id: 5},
+  {user_id: 17, friend_id: 16},
+  {user_id: 18, friend_id: 5},
+  {user_id: 18, friend_id: 16},
+  {user_id: 19, friend_id: 5},
+  {user_id: 19, friend_id: 16},
+  {user_id: 20, friend_id: 5},
+  {user_id: 20, friend_id: 16}
 ])
 Group.create!([
   {name: "sista sista", status: "cancelled", share_cal: true},
   {name: "ayy ladies", status: "active", share_cal: true},
   {name: "Best Friends 5evr", status: "active", share_cal: true},
   {name: "v1", status: "active", share_cal: true},
-  {name: "jehmui", status: "active", share_cal: true}
+  {name: "jehmui", status: "active", share_cal: true},
+  {name: "werk", status: "active", share_cal: false}
 ])
 GroupInvitation.create!([
   {user_id: 6, group_id: 14, mem_type: "member", decision: "Decline"},
@@ -172,6 +226,9 @@ GroupInvitation.create!([
   {user_id: 6, group_id: 18, mem_type: "member", decision: "Accept"},
   {user_id: 13, group_id: 17, mem_type: "member", decision: "Accept"},
   {user_id: 12, group_id: 17, mem_type: "member", decision: "Accept"},
+  {user_id: 5, group_id: 32, mem_type: "owner", decision: "Accept"},
+  {user_id: 20, group_id: 32, mem_type: "member", decision: "Accept"},
+  {user_id: 18, group_id: 32, mem_type: "member", decision: "Accept"},
   {user_id: 5, group_id: 14, mem_type: "owner", decision: "Accept"}
 ])
 Option.create!([
@@ -206,15 +263,17 @@ Option.create!([
   {start: "2017-05-25 14:15:00", end: "2017-05-25 15:15:00", event_id: 114, user_id: 12, vote: "no"}
 ])
 User.create!([
-  {name: "Neil", email: "neil@neil", phone: "", password_digest: "$2a$10$Oe0vw9lzplulqsXfijR9zeLUNWYKvttLRQF1Ob4tEAcxTdxV1G5Oi", status: "active"},
-  {name: "Hanna", email: "hanna@hanna", phone: "", password_digest: "$2a$10$h4vnO.n4.wjuav1JW/bC5e/ZcRw4EV1hcl6bJ/ONVnbeYNtui5ttW", status: "active"},
-  {name: "Judy", email: "judy@judy", phone: "", password_digest: "$2a$10$vkGJEbIn3IJ2t07Jn/5n4eTNiDfv3cseoC9IjdZWxE0.r3L5xuUuu", status: "active"},
-  {name: "Janice", email: "janice@janice", phone: "9176087576", password_digest: "$2a$10$b4GOBZEyMUyvFckY3WrirO0h/su.nzt0VMCcw4Mzu7BgiVh/RSxty", status: "active"},
-  {name: "Osama", email: "osama@osama", phone: "", password_digest: "$2a$10$9WSGi2ztFB6ekUaHVoNMv.7ToqhVN4RUVENXXYslATVts2bm9mnkG", status: "active"},
-  {name: "Derek", email: "derek@derek", phone: "", password_digest: "$2a$10$yY0avciv7.EUIQTTan33y.SXwPbKmVuP/w8efIRllHWvbgpUAjNUG", status: "active"},
-  {name: "Kelly", email: "kelly@kelly", phone: "", password_digest: "$2a$10$Zio7j9up76mq4Ji4bYi.4OeAhlGkFglEi5pSm8s/kRV5PnbQqJehS", status: "active"},
-  {name: "Amanda", email: "amanda@amanda", phone: "", password_digest: "$2a$10$34az8GVPKLIRzWaL1k6r5.ZWGtcD698KVwDRIolVmTYt9XmPejbNW", status: "active"},
-  {name: "Samer", email: "samer@samer", phone: "", password_digest: "$2a$10$jDCqo80bsquIdIgNc3zkDuOfQh5rTuQ7vx/3/r/6MdqeWFpSx0WL6", status: "active"},
-  {name: "Carlo", email: "carlo@carlo", phone: "", password_digest: "$2a$10$dG5HfeIt3XMhi0RBAQkJt.4/Do/dfH8.Rno/S9We7vX./b8EeZP4a", status: "active"},
-  {name: "test", email: "test@test", phone: "", password_digest: "$2a$10$.6kVQwIfVO2l.O24BcYWgeu8.gK1zt538a3D/nlAzc2GYYW/N5Qhq", status: "active"}
+  {name: "Hanna", email: "hanna@hanna", phone: "", password_digest: "$2a$10$h4vnO.n4.wjuav1JW/bC5e/ZcRw4EV1hcl6bJ/ONVnbeYNtui5ttW", status: "active", preference: nil},
+  {name: "Judy", email: "judy@judy", phone: "", password_digest: "$2a$10$vkGJEbIn3IJ2t07Jn/5n4eTNiDfv3cseoC9IjdZWxE0.r3L5xuUuu", status: "active", preference: nil},
+  {name: "Osama", email: "osama@osama", phone: "", password_digest: "$2a$10$9WSGi2ztFB6ekUaHVoNMv.7ToqhVN4RUVENXXYslATVts2bm9mnkG", status: "active", preference: nil},
+  {name: "Derek", email: "derek@derek", phone: "", password_digest: "$2a$10$yY0avciv7.EUIQTTan33y.SXwPbKmVuP/w8efIRllHWvbgpUAjNUG", status: "active", preference: nil},
+  {name: "Amanda", email: "amanda@amanda", phone: "", password_digest: "$2a$10$34az8GVPKLIRzWaL1k6r5.ZWGtcD698KVwDRIolVmTYt9XmPejbNW", status: "active", preference: nil},
+  {name: "Samer", email: "samer@samer", phone: "", password_digest: "$2a$10$jDCqo80bsquIdIgNc3zkDuOfQh5rTuQ7vx/3/r/6MdqeWFpSx0WL6", status: "active", preference: nil},
+  {name: "Carlo", email: "carlo@carlo", phone: "", password_digest: "$2a$10$dG5HfeIt3XMhi0RBAQkJt.4/Do/dfH8.Rno/S9We7vX./b8EeZP4a", status: "active", preference: nil},
+  {name: "Kelly", email: "kelly@kelly", phone: "3154812601", password_digest: "$2a$10$Zio7j9up76mq4Ji4bYi.4OeAhlGkFglEi5pSm8s/kRV5PnbQqJehS", status: "active", preference: "phone"},
+  {name: "Janice", email: "janice@janice", phone: "9176087576", password_digest: "$2a$10$b4GOBZEyMUyvFckY3WrirO0h/su.nzt0VMCcw4Mzu7BgiVh/RSxty", status: "active", preference: "phone"},
+  {name: "Tom", email: "tom@tom", phone: "", password_digest: "$2a$10$WvjVUB5zA4SFA8flg33Ib.hGOH/e5lrPRms1NoNmyN7pIlEjZJlvO", status: "active", preference: nil},
+  {name: "Neil", email: "neil@neil", phone: nil, password_digest: "$2a$10$Oe0vw9lzplulqsXfijR9zeLUNWYKvttLRQF1Ob4tEAcxTdxV1G5Oi", status: "active", preference: "email"},
+  {name: "kaz", email: "kaz@kaz", phone: "", password_digest: "$2a$10$qPo5Noa41PDg3aTCDGuEt.1DVxSF4BSFBQsrj8FdnhX1wlUiDJKFS", status: "active", preference: nil},
+  {name: "sonia", email: "sonia@sonia", phone: "9176087576", password_digest: "$2a$10$xvDVSMPsLrIJDu2t80EFTeWEYD4RmbNjD6qjVAOkYbBaUUR1KNeSa", status: "active", preference: "phone"}
 ])
