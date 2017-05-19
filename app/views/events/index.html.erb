@@ -16,15 +16,15 @@
       <% if @pending_events.count > 0 %>
         <h2><strong>Pending Events</strong></h2>
         <% @pending_events.each do |event| %>
-          <h4><%= event.name %></h4>
-          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
-          <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
-          <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
-            <p><input type="submit" class="btn btn-success" name="decision" value="Accept">
-            <input type="submit" class="btn btn-warning" name="decision" value="Tentative">
-            <input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
-          <% end %>
-          <hr>
+          <div class="well" id="customized-well">
+            <h4><%= event.name %></h4>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
+            <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
+              <p><input type="submit" class="btn btn-success" name="decision" value="Accept">
+              <input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+            <% end %>
+          </div>
         <% end %>
       <% end %>
 

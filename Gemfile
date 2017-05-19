@@ -6,6 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'dotenv-rails', groups: [:development, :test]
 gem 'rails', '~> 5.0.2'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'fullcalendar-rails'
@@ -14,6 +15,8 @@ gem 'bootstrap-multiselect-rails'
 gem 'bootstrap-select-rails'
 gem 'jquery-timepicker-rails'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
+gem 'twilio-ruby'
+gem 'seed_dump'
 gem 'unirest'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'

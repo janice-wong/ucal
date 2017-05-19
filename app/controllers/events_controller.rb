@@ -62,8 +62,6 @@ class EventsController < ApplicationController
         decision: "Accept"
       )
 
-      p event_invite
-
       min_duration = (event.end - event.start) / 60
       i = 0
       (min_duration / 15).to_i.times do
@@ -73,6 +71,8 @@ class EventsController < ApplicationController
         )
         i += (15 * 60)
       end
+
+      @twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
       if params[:groups]
         params[:groups].each do |group|
@@ -91,6 +91,14 @@ class EventsController < ApplicationController
               mem_type: "Partcipant",
               decision: "pending"
             )
+
+            if member.preference == "phone"
+              @twilio_client.account.sms.messages.create(
+                :from => "+1#{ENV["twilio_phone_number"]}",
+                :to => "+1#{member.phone}",
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with ACCEPT or DECLINE"
+              )
+            end
           end
         end
       end

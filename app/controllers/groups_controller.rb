@@ -25,19 +25,29 @@ class GroupsController < ApplicationController
     )
 
     GroupInvitation.create(
-      user_id: current_user[:id],
-      group_id: group[:id],
+      user_id: current_user.id,
+      group_id: group.id,
       mem_type: "owner",
       decision: "Accept"
     )
     
+    @twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
+
     params[:friends].each do |friend|
       GroupInvitation.create(
         user_id: User.find_by(name: friend).id,
-        group_id: group[:id],
+        group_id: group.id,
         mem_type: "member",
         decision: "pending"
       )
+
+      if User.find_by(name: friend).preference == "phone"
+        @twilio_client.account.sms.messages.create(
+          :from => "+1#{ENV["twilio_phone_number"]}",
+          :to => "+1#{User.find_by(name: friend).phone}",
+          :body => "Hi #{friend}!#{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with ACCEPT or DECLINE"
+        )
+      end
     end
     redirect_to '/groups'
   end
