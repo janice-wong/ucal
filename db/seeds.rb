@@ -1,4 +1,11 @@
-rails db:reset
+Option.all.destroy_all
+Event.all.destroy_all
+EventInvitation.all.destroy_all
+Group.all.destroy_all
+GroupInvitation.all.destroy_all
+Block.all.destroy_all
+User.all.destroy_all
+Friendship.all.destroy_all
 
 Block.create!([
   {user_id: 5, start: "2017-05-20 12:00:00"},
