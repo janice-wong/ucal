@@ -42,7 +42,6 @@
   <div class="row">
     <% if @accepted_groups.count > 0 %>
       <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Accepted Groups</h1>
-
         <% @accepted_groups.each do |group| %>
           <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
             <div class="portfolio-wrapper">   
@@ -69,7 +68,7 @@
                     <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
                       <li><a href="/groups/<%= group.id %>">D</a></li>
                     <% end %>
-                    <li><a href="/events/new">+</a></li>
+                    <li><a href="/events/new?group=<%= group.id %>">+</a></li>
                     <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
                   </ul>
                 </div>

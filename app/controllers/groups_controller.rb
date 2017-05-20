@@ -42,10 +42,10 @@ class GroupsController < ApplicationController
       )
 
       if User.find_by(name: friend).preference == "phone"
-        @twilio_client.account.sms.messages.create(
+        @twilio_client.account.messages.create(
           :from => "+1#{ENV["twilio_phone_number"]}",
           :to => "+1#{User.find_by(name: friend).phone}",
-          :body => "Hi #{friend}!#{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with group name - ACCEPT or DECLINE"
+          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with #{group.id} - ACCEPT or DECLINE"
         )
       end
     end
@@ -87,12 +87,12 @@ class GroupsController < ApplicationController
 
   def events
     @group = Group.find(params[:group_id])
+    @event_name = params[:name]
     @events = []
     EventInvitation.where(group_id: @group.id).distinct.pluck(:event_id).each do |event_id|
       if Event.find(event_id).status == "sent"
         @events << Event.find(event_id)
       end
     end
-
   end
 end

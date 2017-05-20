@@ -96,7 +96,7 @@ class EventsController < ApplicationController
               @twilio_client.account.sms.messages.create(
                 :from => "+1#{ENV["twilio_phone_number"]}",
                 :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with ACCEPT or DECLINE"
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with #{event.id} - ACCEPT or DECLINE"
               )
             end
           end
@@ -126,7 +126,7 @@ class EventsController < ApplicationController
 
     elsif params[:submit] == "group_cal" && params[:groups]
       if params[:groups].count == 1
-        redirect_to "/groups/#{Group.find_by(name: params[:groups][0]).id}/events"
+        redirect_to "/groups/#{Group.find_by(name: params[:groups][0]).id}/events?name=#{params[:name]}"
       end
     end
   end
@@ -207,6 +207,7 @@ class EventsController < ApplicationController
       end_hr,
       end_min
     )
+
     range = (end_time - start_time) / 60
 
     if params[:duration_unit] == "min"
@@ -220,10 +221,10 @@ class EventsController < ApplicationController
     # day_time_options is an array of all available options
     day_time_options = []
     day_options.each do |day_option|
-      start_time = DateTime.new(
+      start = DateTime.new(
         day_option.year,
         day_option.month,
-        day_option.mday,
+        day_option.day,
         start_time.hour,
         start_time.min
       )
@@ -232,7 +233,7 @@ class EventsController < ApplicationController
         option = []
         i = 0
         (@min / 15).times do
-          option << (start_time + i.minutes).strftime("%a, %b %d %I:%M %P")
+          option << (start + i.minutes).strftime("%a, %b %d %I:%M %P")
           i += 15
         end
 
@@ -243,7 +244,7 @@ class EventsController < ApplicationController
           }
         )
 
-        start_time += 15.minutes
+        start += 15.minutes
       end
     end
 
@@ -276,7 +277,7 @@ class EventsController < ApplicationController
     @available_options.each do |available_option|
       @options << [available_option[:start].first, (Time.strptime(available_option[:start].last, "%a, %b %d %I:%M %P") + 15.minutes).strftime("%a, %b %d %I:%M %P")]
     end
-    
+
     render 'presented_options.html.erb'
   end
 
@@ -290,9 +291,6 @@ class EventsController < ApplicationController
     GroupInvitation.where(group_id: Group.find_by(name: params[:group_name]).id).each do |invitation|
       user_array << invitation.user
     end
-
-    p '-' * 100
-    p params[:options]
 
     option_array = []
     min = params[:min].to_i
@@ -366,6 +364,10 @@ class EventsController < ApplicationController
         end
       end
     end
+
+    p '-' * 100
+    p events
+    p @event_options
   end
 
   def send_final

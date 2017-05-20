@@ -35,7 +35,7 @@ $(document).ready(function() {
           text: '+ add',
           click: function() {
             if (time) {
-              window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1] + '&group=' + '<%= @group.id %>';
+              window.location.href = '/events/new?start=' +  time[0] + '&end=' + time[1] + '&group=' + '<%= @group.id %>' + '&name=' + '<%= @event_name %>';
             } else {
               window.location.href = '/events/new';
             }
@@ -51,12 +51,6 @@ $(document).ready(function() {
       eventRender: function(event, element) { 
         if (event.user) {
           element.find('.fc-title').append(" - " + event.user);
-        // FIGURE OUT BELOW ... BASICALLY OTHER PEOPLE'S CALENDARS SHOULD BE PRIVATE
-        // if (event.user === '<%= current_user %>') {
-        //   element.find('.fc-title').append(" - " + event.user);
-        // } else {
-        //   element.find('').append(event.user);
-        // }
         }
       },
       selectable: true,

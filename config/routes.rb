@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   post '/option_proposals' => 'events#vote_on_options'
   get '/option_responses' => 'events#option_responses'
   post '/option_send_final' => 'events#send_final'
-  # should option methods be in the option model?
+  # should option methods be in the option controller?
 
   get '/groups' => 'groups#index'
   get '/groups/new' => 'groups#new'

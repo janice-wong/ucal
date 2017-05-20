@@ -11,4 +11,15 @@ class ApplicationController < ActionController::Base
   def authenticate_user!
     redirect_to '/login' unless current_user
   end
+
+  def pending_events_count
+    # @events = []
+    # EventInvitation.where(user_id: current_user.id, decision: "pending").each do |invite|
+    #   if Event.find(invite.event_id).status == "sent"
+    #     @events << invite
+    #   end
+    # end
+    # @events.count
+    return 2
+  end
 end

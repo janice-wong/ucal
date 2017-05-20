@@ -21,7 +21,7 @@
         <input type="hidden" name="min" value="<%= @min %>">
         <select class="multiselect" multiple="multiple", name = "options[]">
           <% @options.each do |option| %>
-            <p><option value="<%= option[0] %>"><%= option[0] %> - <%= option[1][13..20] %></option></p>
+            <p><option value="<%= option[0] %>"><%= option[0] %> - <%= option[1][12..20] %></option></p>
           <% end %>
         </select>
         <br>

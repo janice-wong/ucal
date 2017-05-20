@@ -18,7 +18,11 @@
         <br>
         <br>
         <h4>What</h4>
-        <p><input type="text" name="name"></p>
+        <% if params[:name] %>
+          <p><input type="text" name="name" value="<%= params[:name] %>"></p>
+        <% else %>
+          <p><input type="text" name="name"></p>
+        <% end %>
         <br>
         <h4>Where</h4>
         <p><input type="text" name="location"></p>

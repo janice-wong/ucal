@@ -41,17 +41,17 @@
               <% if current_user %>
                 <li class="active"><a>Today is <%= (Time.current - 4.hours).strftime("%A, %b %e")%></a></li>
                 <li><a href="/events">Home</a></li>
-                <li class="dropdown"><a>Events (CODE THIS) <i class="fa fa-angle-down"></i></a>
+                <li class="dropdown"><a>Events (laskdj) <i class="fa fa-angle-down"></i></a>
                     <ul role="menu" class="sub-menu">
+                      <li><a href="/option_proposals">See Pending Options</a></li>
+                      <li><a href="/option_responses">See Option Responses</a></li>
                       <li><a href="/events/new">Add Event</a></li>
-                      <li><a href="/option_proposals">Event Options</a></li>
-                      <li><a href="/option_responses">Event Option Responses</a></li>
                     </ul>
                 </li>                    
                 <li class="dropdown"><a href="#">Groups (<%= GroupInvitation.where(user_id: current_user.id, decision: "pending").count %>) <i class="fa fa-angle-down"></i></a>
                     <ul role="menu" class="sub-menu">
-                      <li><a href="/groups/new">Add Group</a></li>
                       <li><a href="/groups">See All</a></li>
+                      <li><a href="/groups/new">Add Group</a></li>
                     </ul>
                 </li>
                 <li><%= link_to 'Log Out', '/logout', {method: :delete} %></li>
