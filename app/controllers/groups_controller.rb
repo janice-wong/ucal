@@ -31,7 +31,7 @@ class GroupsController < ApplicationController
       decision: "Accept"
     )
     
-    @twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
+    twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
     params[:friends].each do |friend|
       GroupInvitation.create(
@@ -42,10 +42,10 @@ class GroupsController < ApplicationController
       )
 
       if User.find_by(name: friend).preference == "phone"
-        @twilio_client.account.messages.create(
+        twilio_client.account.messages.create(
           :from => "+1#{ENV["twilio_phone_number"]}",
           :to => "+1#{User.find_by(name: friend).phone}",
-          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with Y #{group.id}G or N #{group.id}G to accept or decline."
+          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with YES #{group.id}G or NO #{group.id}G to accept or decline."
         )
       end
     end

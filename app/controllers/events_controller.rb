@@ -72,7 +72,7 @@ class EventsController < ApplicationController
         i += (15 * 60)
       end
 
-      @twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
+      twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
       if params[:groups]
         params[:groups].each do |group|
@@ -93,10 +93,10 @@ class EventsController < ApplicationController
             )
 
             if member.preference == "phone"
-              @twilio_client.account.sms.messages.create(
+              twilio_client.account.sms.messages.create(
                 :from => "+1#{ENV["twilio_phone_number"]}",
                 :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y #{event.id}E or N #{event.id}E to accept or decline."
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with YES #{event.id}E or NO #{event.id}E to accept or decline."
               )
             end
           end
