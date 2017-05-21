@@ -12,25 +12,7 @@ skip_before_action :verify_authenticity_token
       end
     end
 
-    p '*' * 100
-    p params[:Body][0..1]
-    p '*' * 100
-    p sent_events
-    p params[:Body][3..-2]
-    p params[:Body][3..-2].to_i
-    p sent_events.index(params[:Body][3..-2].to_i)
-    p '*' * 100
-    p params[:Body][-1]
-
-    p '-' * 100
-    p params[:Body][0..1]
-    p '-' * 100
-    p sent_events
-    p params[:Body][3..-2]
-    p params[:Body][3..-2].to_i
-    p sent_events.index(params[:Body][3..-2].to_i)
-    p '-' * 100
-    p params[:Body][-1]
+    twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
     if (params[:Body][0..1] == "NO" && sent_events.index(params[:Body][3..-2].to_i) && (params[:Body][-1] == "E" || params[:Body][-1] == "G")) || (params[:Body][0..2] == "YES" && sent_events.index(params[:Body][4..-2].to_i) && (params[:Body][-1] == "E" || params[:Body][-1] == "G"))
 
@@ -54,8 +36,13 @@ skip_before_action :verify_authenticity_token
         EventInvitation.find_by(event_id: event_id, user_id: user.id).update(decision: decision)
       end
 
+      twilio_client.account.messages.create(
+        :from => "+1#{ENV["twilio_phone_number"]}",
+        :to => "+1#{user.phone}",
+        :body => "Response received"
+      )
+
     else
-      twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
       twilio_client.account.messages.create(
         :from => "+1#{ENV["twilio_phone_number"]}",
         :to => "+1#{user.phone}",
