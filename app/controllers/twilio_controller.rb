@@ -7,7 +7,7 @@ skip_before_action :verify_authenticity_token
     p params[:From]
     p params[:Body]
 
-    user = User.find_by(phone: params[:From])
+    user = User.find_by(phone: params[:From][2..params[:From].length - 1])
     if params[:Body][params[:Body].length - 1] == "G"
       group_id = params[:Body][2..params[:Body].length - 2].to_i
       decision = ""
