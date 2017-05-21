@@ -12,6 +12,16 @@ skip_before_action :verify_authenticity_token
       end
     end
 
+    p '*' * 100
+    p params[:Body][0..1]
+    p '*' * 100
+    p sent_events
+    p params[:Body][3..-2]
+    p params[:Body][3..-2].to_i
+    p sent_events.index(params[:Body][3..-2].to_i)
+    p '*' * 100
+    p params[:Body][-1]
+
     if (params[:Body][0..1] == "NO" && sent_events.index(params[:Body][3..-2].to_i) && (params[:Body][-1] == "E" || params[:Body][-1] == "G")) || (params[:Body][0..2] == "NO" && sent_events.index(params[:Body][4..-2].to_i) && (params[:Body][-1] == "E" || params[:Body][-1] == "G"))
 
       if params[:Body][-1] == "G"
