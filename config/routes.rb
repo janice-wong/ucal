@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get '/groups/:id/edit' => 'groups#edit'
   patch '/groups/:id' => 'groups#update'
   delete '/groups/:id' => 'groups#destroy'
+  # get '/friends' => 'grou'
 
   get '/groups/:group_id/events' => 'groups#events'
 
@@ -38,7 +39,7 @@ Rails.application.routes.draw do
   get '/groupinvitations/:id/decline' => 'group_invitations#decline'
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
-  get '/twilio/process_group_response' => 'texts#process_group_response'
+  get '/twilio/process_response' => 'twilio#process_response'
 
   namespace :api do
     namespace :v1 do

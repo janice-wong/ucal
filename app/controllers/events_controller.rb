@@ -96,7 +96,7 @@ class EventsController < ApplicationController
               @twilio_client.account.sms.messages.create(
                 :from => "+1#{ENV["twilio_phone_number"]}",
                 :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y #{event.id} or N #{event.id} to accept or decline."
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y E-#{event.id} or N E-#{event.id} to accept or decline."
               )
             end
           end
@@ -133,16 +133,19 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+    @event_pending = EventInvitation.where(event_id: @event.id, decision: "pending")
+    @event_accept = EventInvitation.where(event_id: @event.id, decision: "Accept")
+    @event_decline = EventInvitation.where(event_id: @event.id, decision: "Decline")
     render 'show.html.erb'
   end
 
-# need to build this out
+# need to build edit method out
   def edit
     @event = Event.find(params[:id])
-    render 'edit.html.erb'
+    redirect_to "/events/#{@event.id}"
   end
 
-# need to build this out
+# need to build update method out
   def update
     @event = Event.find(params[:id])
     @event.update(
@@ -158,7 +161,7 @@ class EventsController < ApplicationController
     redirect_to "/events/#{@event.id}"
   end
 
-# is this even used?
+# is destroy method even used?
   def destroy
     @event = Event.find(params[:id])
     @event.update(status: "cancelled")

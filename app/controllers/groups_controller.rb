@@ -45,7 +45,7 @@ class GroupsController < ApplicationController
         @twilio_client.account.messages.create(
           :from => "+1#{ENV["twilio_phone_number"]}",
           :to => "+1#{User.find_by(name: friend).phone}",
-          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with Y #{group.id} or N #{group.id} to accept or decline."
+          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with Y G-#{group.id} or N G-#{group.id} to accept or decline."
         )
       end
     end
@@ -57,11 +57,6 @@ class GroupsController < ApplicationController
     @group_pending = GroupInvitation.where(group_id: @group.id, decision: "pending")
     @group_accept = GroupInvitation.where(group_id: @group.id, decision: "Accept")
     @group_decline = GroupInvitation.where(group_id: @group.id, decision: "Decline")
-    p '*' * 50
-    p @group_pending
-    p @group_accept
-    p @group_decline
-    p '*' * 50
     render 'show.html.erb'
   end
 
