@@ -1,6 +1,10 @@
-<% if @pending_groups.count < 1 && @accepted_groups.count < 1 %>
-  <p>You have no groups.</p>
-<% end %>
+<div class="container">
+  <div class="row">
+    <% if @pending_groups.count < 1 && @accepted_groups.count < 1 %>
+      <h1>You have no groups. How sad :( </h1>
+    <% end %>
+  </div>
+</div>
 
 <div class="container">
   <div class="row">
@@ -69,7 +73,9 @@
                       <li><a href="/groups/<%= group.id %>">D</a></li>
                     <% end %>
                     <li><a href="/events/new?group=<%= group.id %>">+</a></li>
-                    <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
+                    <% if group.share_cal %>
+                      <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
+                    <% end %>
                   </ul>
                 </div>
               </div>

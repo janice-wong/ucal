@@ -30,9 +30,9 @@
           <div class="navbar-header">
               <a class="navbar-brand">
                 <% if current_user && params[:group_id]%>
-                  <h1><a href="/groups/<%= Group.find(params[:group_id]).id %>/events"><%= Group.find(params[:group_id]).name.capitalize %>'s Calendar</a></h1>
+                  <h1><img src="/images/logo2.png"> <%= Group.find(params[:group_id]).name.capitalize %>'s Calendar</h1>
                 <% elsif current_user %>
-                  <h1><a>Welcome <%= current_user.name.capitalize %></a></h1>
+                  <h1><img src="/images/logo2.png"> Welcome <%= current_user.name.capitalize %></h1>
                 <% end %>
               </a>
           </div>
@@ -41,16 +41,16 @@
               <% if current_user %>
                 <li class="active"><a>Today is <%= (Time.current - 4.hours).strftime("%A, %b %e")%></a></li>
                 <li><a href="/events">Home</a></li>
-                <li class="dropdown"><a>Events (laskdj) <i class="fa fa-angle-down"></i></a>
+                <li class="dropdown"><a>Events (<%= pending_events_count + pending_options_array.count + option_responses_count%>) <i class="fa fa-angle-down"></i></a>
                     <ul role="menu" class="sub-menu">
-                      <li><a href="/option_proposals">See Pending Options</a></li>
-                      <li><a href="/option_responses">See Option Responses</a></li>
+                      <li><a href="/option_proposals">Pending Options (<%= pending_options_array.count %>)</a></li>
+                      <li><a href="/option_responses">Option Responses (<%= option_responses_count %>)</a></li>
                       <li><a href="/events/new">Add Event</a></li>
                     </ul>
                 </li>                    
                 <li class="dropdown"><a href="#">Groups (<%= GroupInvitation.where(user_id: current_user.id, decision: "pending").count %>) <i class="fa fa-angle-down"></i></a>
                     <ul role="menu" class="sub-menu">
-                      <li><a href="/groups">See All</a></li>
+                      <li><a href="/groups">All Groups</a></li>
                       <li><a href="/groups/new">Add Group</a></li>
                     </ul>
                 </li>

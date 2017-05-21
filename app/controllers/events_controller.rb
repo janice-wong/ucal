@@ -96,7 +96,7 @@ class EventsController < ApplicationController
               @twilio_client.account.sms.messages.create(
                 :from => "+1#{ENV["twilio_phone_number"]}",
                 :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with #{event.id} - ACCEPT or DECLINE"
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y #{event.id} or N #{event.id} to accept or decline."
               )
             end
           end
@@ -319,13 +319,6 @@ class EventsController < ApplicationController
   end
 
   def option_proposals
-    @event_ids = Option.where(user_id: current_user.id, vote: "pending").distinct.pluck(:event_id)
-    @event_ids.each do |event_id|
-      if Event.find(event_id).status == "sent"
-        @event_ids.delete(event_id)
-      end
-    end
-    render 'option_proposals.html.erb'
   end
 
   def vote_on_options
@@ -364,10 +357,6 @@ class EventsController < ApplicationController
         end
       end
     end
-
-    p '-' * 100
-    p events
-    p @event_options
   end
 
   def send_final

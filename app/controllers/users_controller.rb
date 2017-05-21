@@ -16,12 +16,12 @@ class UsersController < ApplicationController
 
     Friendship.create(
       user_id: user.id,
-      friend_id: 5
+      friend_id: User.find_by(name: "Janice").id
     )
 
     Friendship.create(
       user_id: user.id,
-      friend_id: 16
+      friend_id: User.find_by(name: "Tom").id
     )
 
     redirect_to '/events'

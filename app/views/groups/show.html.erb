@@ -1,52 +1,56 @@
-<p>Name: <%= @group.name.capitalize %></p>
-<p>
-  Share Calendar?: 
-  <% if @group.share_cal %>
-    Yes
-  <% else %>
-    No
-  <% end %>
-</p>
-<% if current_user==GroupInvitation.find_by(group_id:@group.id,mem_type:"owner").user %>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Decision</th>
-      </tr>
-    </thead>
-
-    <% if @group_pending %>
-      <% @group_pending.each do |invitation| %>
-        <tr>
-          <td><%= invitation.mem_type.capitalize %></td>
-          <td><%= User.find(invitation.user_id).name.capitalize %></td>
-          <td><%= invitation.decision.capitalize %></td>
-        </tr>
+<div class="container">
+  <div class="row col-md-6">
+    <p><strong>Name:</strong> <%= @group.name.capitalize %></p>
+    <p>
+      <strong>Share Calendar?: </strong>
+      <% if @group.share_cal %>
+        Yes
+      <% else %>
+        No
       <% end %>
+    </p>
+    <% if current_user==GroupInvitation.find_by(group_id:@group.id,mem_type:"owner").user %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Decision</th>
+          </tr>
+        </thead>
+
+        <% if @group_pending %>
+          <% @group_pending.each do |invitation| %>
+            <tr>
+              <td><%= invitation.mem_type.capitalize %></td>
+              <td><%= User.find(invitation.user_id).name.capitalize %></td>
+              <td><%= invitation.decision.capitalize %></td>
+            </tr>
+          <% end %>
+        <% end %>
+
+        <% if @group_accept %>
+          <% @group_accept.each do |invitation| %>
+            <tr>
+              <td><%= invitation.mem_type.capitalize %></td>
+              <td><%= User.find(invitation.user_id).name.capitalize %></td>
+              <td><%= invitation.decision %></td>
+            </tr>
+          <% end %>
+        <% end %>
+
+        <% if @group_decline %>
+          <% @group_decline.each do |invitation| %>
+            <tr>
+              <td><%= invitation.mem_type.capitalize %></td>
+              <td><%= User.find(invitation.user_id).name.capitalize %></td>
+              <td><%= invitation.decision %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
     <% end %>
 
-    <% if @group_accept %>
-      <% @group_accept.each do |invitation| %>
-        <tr>
-          <td><%= invitation.mem_type.capitalize %></td>
-          <td><%= User.find(invitation.user_id).name.capitalize %></td>
-          <td><%= invitation.decision %></td>
-        </tr>
-      <% end %>
-    <% end %>
-
-    <% if @group_decline %>
-      <% @group_decline.each do |invitation| %>
-        <tr>
-          <td><%= invitation.mem_type.capitalize %></td>
-          <td><%= User.find(invitation.user_id).name.capitalize %></td>
-          <td><%= invitation.decision %></td>
-        </tr>
-      <% end %>
-    <% end %>
-  </table>
-<% end %>
-
-<p><%= button_to 'Edit', "/groups/#{@group.id}/edit", {method: :get, class: "btn btn-warning"} %></p>
+    <p><%= button_to 'Edit', "/groups/#{@group.id}/edit", {method: :get, class: "btn btn-warning"} %></p>
+  </div>
+</div>

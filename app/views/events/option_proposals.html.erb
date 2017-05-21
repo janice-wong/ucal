@@ -4,10 +4,10 @@
       <div id="calendar"></div>
     </div>
     <div class="col-md-4" data-wow-duration="1000ms" data-wow-delay="300ms">
-      <% if @event_ids.count == 0 %>
+      <% if pending_options_array.count == 0 %>
         <h2>No pending event options</h2>
       <% else %>
-        <% @event_ids.each do |event_id| %>
+        <% pending_options_array.each do |event_id| %>
           <%= form_tag "/option_proposals", method: :post do %>
             <h2><strong><%= Event.find(event_id).name %></strong></h2>
             <input type="hidden" name="event_id" value="<%= event_id %>">

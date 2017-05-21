@@ -18,6 +18,9 @@
         <% @pending_events.each do |event| %>
           <div class="well" id="customized-well">
             <h4><%= event.name %></h4>
+            <% if EventInvitation.find_by(event_id: event.id).group_id %>
+              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= Group.find(EventInvitation.find_by(event_id: event.id).group_id).name %> - <%= EventInvitation.find_by(event_id: event.id, mem_type: "owner").user.name %></p>
+            <% end %>
             <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
             <% if event.location != "" %>
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
@@ -38,6 +41,9 @@
             <h4><a href="/events/<%= event.id %>"><%= event.name %></a></h4>
           <% else %>
             <h4><%= event.name %></h4>
+          <% end %>
+          <% if EventInvitation.find_by(event_id: event.id).group_id %>
+            <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= Group.find(EventInvitation.find_by(event_id: event.id).group_id).name %> - <%= EventInvitation.find_by(event_id: event.id, mem_type: "owner").user.name %></p>
           <% end %>
           <% if event.start %>
             <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
