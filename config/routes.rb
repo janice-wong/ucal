@@ -31,7 +31,8 @@ Rails.application.routes.draw do
   get '/groups/:id/edit' => 'groups#edit'
   patch '/groups/:id' => 'groups#update'
   delete '/groups/:id' => 'groups#destroy'
-  # get '/friends' => 'grou'
+  get '/add_friends' => 'groups#add_friends'
+  post '/add_friends' => 'groups#create_friendships'
 
   get '/groups/:group_id/events' => 'groups#events'
 

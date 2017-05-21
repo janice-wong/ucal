@@ -45,7 +45,7 @@ class GroupsController < ApplicationController
         @twilio_client.account.messages.create(
           :from => "+1#{ENV["twilio_phone_number"]}",
           :to => "+1#{User.find_by(name: friend).phone}",
-          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with Y G-#{group.id} or N G-#{group.id} to accept or decline."
+          :body => "Hi #{friend}! #{GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user.name} invites you to join #{group.name} on UCal! Reply with Y #{group.id}G or N #{group.id}G to accept or decline."
         )
       end
     end
@@ -89,5 +89,19 @@ class GroupsController < ApplicationController
         @events << Event.find(event_id)
       end
     end
+  end
+
+  def add_friends
+    @users_friends = current_user.friends + current_user.inverse_friends
+  end
+
+  def create_friendships
+    params[:emails].delete_if { |email| email == "" }
+    params[:emails].each do |email|
+      lowercase_email = email.downcase
+      Friendship.create(user_id: current_user.id, friend_id: User.find_by(email: lowercase_email).id)
+    end
+
+    redirect_to "/add_friends"
   end
 end

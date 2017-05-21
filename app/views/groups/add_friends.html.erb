@@ -1,0 +1,19 @@
+<section id="services">
+  <div class="container">
+    <h2 class="title wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Your Friends</h2>
+    <% @users_friends.each do |friend| %>
+      <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/16/User-blue-icon.png" > <%= friend.name %></p>
+    <% end %>
+    <br>
+    <br>
+    <h2 class="title wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Add Friends</h2>
+    <%= form_tag "/add_friends", method: :post do %>
+      <p>Email: <input type="email" name="emails[]"></p>
+      <p>Email: <input type="email" name="emails[]"></p>
+      <p>Email: <input type="email" name="emails[]"></p>
+      <p>Email: <input type="email" name="emails[]"></p>
+      <p>Email: <input type="email" name="emails[]"></p>
+      <p><input class="btn btn-primary" type="submit" value="Add Friend(s)"></p>
+    <% end %>
+  </div>
+</section>

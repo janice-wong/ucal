@@ -96,7 +96,7 @@ class EventsController < ApplicationController
               @twilio_client.account.sms.messages.create(
                 :from => "+1#{ENV["twilio_phone_number"]}",
                 :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y E-#{event.id} or N E-#{event.id} to accept or decline."
+                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with Y #{event.id}E or N #{event.id}E to accept or decline."
               )
             end
           end

@@ -3,8 +3,8 @@ skip_before_action :verify_authenticity_token
 
   def process_response
     user = User.find_by(phone: params[:From])
-    if params[:Body][2] == "G"
-      group_id = params[:Body][4..params[:Body].length].to_i
+    if params[:Body][params[:Body].length - 1] == "G"
+      group_id = params[:Body][2..params[:Body].length - 2].to_i
       decision = ""
       if params[:Body][0] == "Y"
         decision = "Yes"
@@ -13,8 +13,8 @@ skip_before_action :verify_authenticity_token
       end
 
       GroupInvitation.find_by(group_id: group_id, user_id: user.id).update(decision: decision)
-    elsif params[:Body][2] == "E"
-      event_id = params[:Body][4..params[:Body].length].to_i
+    elsif params[:Body][params[:Body].length - 1] == "E"
+      event_id = params[:Body][2..params[:Body].length - 2].to_i
       decision = ""
       if params[:Body][0] == "Y"
         decision = "Yes"
