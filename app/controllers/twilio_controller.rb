@@ -7,7 +7,7 @@ skip_before_action :verify_authenticity_token
 
     sent_events = []
     EventInvitation.where(user_id: user.id, decision: "pending").each do |invite|
-      if invite.status == "sent"
+      if Event.find(invite.event_id).status == "sent"
         sent_events << invite.event_id
       end
     end
