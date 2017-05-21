@@ -2,6 +2,11 @@ class TwilioController < ApplicationController
 skip_before_action :verify_authenticity_token
 
   def process_response
+    p '-' * 100
+    p params
+    p params[:From]
+    p params[:Body]
+
     user = User.find_by(phone: params[:From])
     if params[:Body][params[:Body].length - 1] == "G"
       group_id = params[:Body][2..params[:Body].length - 2].to_i

@@ -2,4 +2,5 @@
 
 require_relative 'config/environment'
 
+$stdout.sync = true
 run Rails.application
