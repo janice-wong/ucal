@@ -13,14 +13,14 @@ class EventsController < ApplicationController
     if current_user
       EventInvitation.where(user_id: current_user.id).each do |invitation|
         if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start
+          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).start > DateTime.current
             @pending_events << invitation.event
           else
             @pending_events.unshift(invitation.event)
             pending_counter += 1
           end
         elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start
+          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).start > DateTime.current
             @accepted_events << invitation.event
           else
             @accepted_events.unshift(invitation.event)
