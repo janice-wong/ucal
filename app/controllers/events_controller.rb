@@ -7,15 +7,31 @@ class EventsController < ApplicationController
     end
     @pending_events = []
     @accepted_events = []
+    pending_counter = 0
+    accepted_counter = 0
+
     if current_user
       EventInvitation.where(user_id: current_user.id).each do |invitation|
         if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
-          @pending_events << invitation.event
+          if Event.find(invitation.event_id).start
+            @pending_events << invitation.event
+          else
+            @pending_events.unshift(invitation.event)
+            pending_counter += 1
+          end
         elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
-          @accepted_events << invitation.event
+          if Event.find(invitation.event_id).start
+            @accepted_events << invitation.event
+          else
+            @accepted_events.unshift(invitation.event)
+            accepted_counter += 1
+          end
         end
       end
     end
+
+    @pending_events = @pending_events[pending_counter..-1].sort_by {|vn| vn[:start]}
+    @accepted_events = @accepted_events[accepted_counter..-1].sort_by {|vn| vn[:start]}
   end
 
   def new
@@ -46,12 +62,21 @@ class EventsController < ApplicationController
   end
 
   def create
+    yelp_link = ""
+    if params[:city] && params[:state]
+      location = params[:location].tr(" ", "+")
+      city = params[:city].tr(" ", "+")
+      state = params[:state].tr(" ", "+")
+      yelp_link = "https://www.yelp.com/search?find_desc=#{location}&find_loc=#{city},+#{state}"
+    end
+
     if params[:submit] == "create"
       event = Event.create(
         name: params[:name],
         start: DateTime.strptime(params[:start], "%m/%d/%Y %l:%M %p"),
         end: DateTime.strptime(params[:end], "%m/%d/%Y %l:%M %p"),
         location: params[:location],
+        yelp: yelp_link,
         status: "sent"
       )
 
@@ -108,7 +133,8 @@ class EventsController < ApplicationController
       @group_names = params[:groups]
       event = Event.create(
         name: params[:name],
-        location: params[:location]
+        location: params[:location],
+        yelp: yelp_link
       )
 
       invite = EventInvitation.create(
@@ -154,9 +180,7 @@ class EventsController < ApplicationController
       end_date: params[:end_date],
       start_time: params[:start_time],
       end_time: params[:end_time],
-      # duration: params[:duration],
-      location: params[:location],
-      # status: "sent"
+      location: params[:location]
     )
     redirect_to "/events/#{@event.id}"
   end
