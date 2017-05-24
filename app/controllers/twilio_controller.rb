@@ -24,10 +24,10 @@ skip_before_action :verify_authenticity_token
     if (params[:Body][0..1] == "NO" && sent_events.index(params[:Body][3..-2].to_i) && params[:Body][-1] == "E") || (params[:Body][0..2] == "YES" && sent_events.index(params[:Body][4..-2].to_i) && params[:Body][-1] == "E")
 
       if params[:Body][0] == "Y"
-        decision = "Yes"
+        decision = "Accept"
         event_id = params[:Body][4..-2].to_i
       elsif params[:Body][0] == "N"
-        decision = "No"
+        decision = "Decline"
         event_id = params[:Body][3..-2].to_i
       end
       EventInvitation.find_by(event_id: event_id, user_id: user.id).update(decision: decision)
@@ -41,10 +41,10 @@ skip_before_action :verify_authenticity_token
     elsif (params[:Body][0..1] == "NO" && sent_groups.index(params[:Body][3..-2].to_i) && params[:Body][-1] == "G") || (params[:Body][0..2] == "YES" && sent_groups.index(params[:Body][4..-2].to_i) && params[:Body][-1] == "G")
 
       if params[:Body][0] == "Y"
-        decision = "Yes"
+        decision = "Accept"
         group_id = params[:Body][4..-2].to_i
       elsif params[:Body][0] == "N"
-        decision = "No"
+        decision = "Decline"
         group_id = params[:Body][3..-2].to_i
       end
       GroupInvitation.find_by(group_id: group_id, user_id: user.id).update(decision: decision)
