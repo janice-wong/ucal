@@ -21,62 +21,39 @@ skip_before_action :verify_authenticity_token
 
     twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
-    if params[:Body][-1] == "E"
+    if (params[:Body][0..1] == "NO" && sent_events.index(params[:Body][3..-2].to_i) && params[:Body][-1] == "E") || (params[:Body][0..2] == "YES" && sent_events.index(params[:Body][4..-2].to_i) && params[:Body][-1] == "E")
 
-      if (params[:Body][0..1] == "NO" && sent_events.index(params[:Body][3..-2].to_i)) || (params[:Body][0..2] == "YES" && sent_events.index(params[:Body][4..-2].to_i))
-
-        if params[:Body][0] == "Y"
-          decision = "Yes"
-          event_id = params[:Body][4..-2].to_i
-        elsif params[:Body][0] == "N"
-          decision = "No"
-          event_id = params[:Body][3..-2].to_i
-        end
-        EventInvitation.find_by(event_id: event_id, user_id: user.id).update(decision: decision)
-
-        twilio_client.account.messages.create(
-          :from => "+1#{ENV["twilio_phone_number"]}",
-          :to => "+1#{user.phone}",
-          :body => "Response received"
-        )
-
-      else
-
-        twilio_client.account.messages.create(
-          :from => "+1#{ENV["twilio_phone_number"]}",
-          :to => "+1#{user.phone}",
-          :body => "Ok but actually do it right this time"
-        )
-
+      if params[:Body][0] == "Y"
+        decision = "Yes"
+        event_id = params[:Body][4..-2].to_i
+      elsif params[:Body][0] == "N"
+        decision = "No"
+        event_id = params[:Body][3..-2].to_i
       end
+      EventInvitation.find_by(event_id: event_id, user_id: user.id).update(decision: decision)
 
-    elsif params[:Body][-1] == "G"
+      twilio_client.account.messages.create(
+        :from => "+1#{ENV["twilio_phone_number"]}",
+        :to => "+1#{user.phone}",
+        :body => "Response received"
+      )
 
-      if (params[:Body][0..1] == "NO" && sent_groups.index(params[:Body][3..-2].to_i)) || (params[:Body][0..2] == "YES" && sent_groups.index(params[:Body][4..-2].to_i))
+    elsif (params[:Body][0..1] == "NO" && sent_groups.index(params[:Body][3..-2].to_i) && params[:Body][-1] == "G") || (params[:Body][0..2] == "YES" && sent_groups.index(params[:Body][4..-2].to_i) && params[:Body][-1] == "G")
 
-        if params[:Body][0] == "Y"
-          decision = "Yes"
-          group_id = params[:Body][4..-2].to_i
-        elsif params[:Body][0] == "N"
-          decision = "No"
-          group_id = params[:Body][3..-2].to_i
-        end
-        GroupInvitation.find_by(group_id: group_id, user_id: user.id).update(decision: decision)
-
-        twilio_client.account.messages.create(
-          :from => "+1#{ENV["twilio_phone_number"]}",
-          :to => "+1#{user.phone}",
-          :body => "Response received"
-        )
-
-      else
-
-        twilio_client.account.messages.create(
-          :from => "+1#{ENV["twilio_phone_number"]}",
-          :to => "+1#{user.phone}",
-          :body => "Ok but actually do it right this time"
-        )
+      if params[:Body][0] == "Y"
+        decision = "Yes"
+        group_id = params[:Body][4..-2].to_i
+      elsif params[:Body][0] == "N"
+        decision = "No"
+        group_id = params[:Body][3..-2].to_i
       end
+      GroupInvitation.find_by(group_id: group_id, user_id: user.id).update(decision: decision)
+
+      twilio_client.account.messages.create(
+        :from => "+1#{ENV["twilio_phone_number"]}",
+        :to => "+1#{user.phone}",
+        :body => "Response received"
+      )
 
     else
 
@@ -85,7 +62,7 @@ skip_before_action :verify_authenticity_token
         :to => "+1#{user.phone}",
         :body => "Ok but actually do it right this time"
       )
-        
+
     end
   end
 end

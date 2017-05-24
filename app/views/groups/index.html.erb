@@ -69,6 +69,7 @@
                       No
                     <% end %>
                   </p>
+                  <p><strong>Owner: </strong><%= GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user.name.capitalize %></p>
                   <% members = [] %>
                   <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
                     <% members << invitation.user.name.capitalize %>
