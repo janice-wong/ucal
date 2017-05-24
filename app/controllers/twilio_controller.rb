@@ -78,6 +78,14 @@ skip_before_action :verify_authenticity_token
         )
       end
 
+    else
+
+      twilio_client.account.messages.create(
+        :from => "+1#{ENV["twilio_phone_number"]}",
+        :to => "+1#{user.phone}",
+        :body => "Ok but actually do it right this time"
+      )
+        
     end
   end
 end
