@@ -165,7 +165,7 @@ class EventsController < ApplicationController
     render 'show.html.erb'
   end
 
-# need to build edit method out
+  # need to build edit method out
   # def edit
   #   @event = Event.find(params[:id])
   #   redirect_to "/events/#{@event.id}"
@@ -178,13 +178,6 @@ class EventsController < ApplicationController
     )
     redirect_to "/events"
   end
-
-# is destroy method even used?
-  # def destroy
-  #   @event = Event.find(params[:id])
-  #   @event.update(status: "cancelled")
-  #   redirect_to '/events'
-  # end
 
   def create_options
     day_to_num = {"Sunday" => 0, "Monday" => 1, "Tuesday" => 2, "Wednesday" => 3, "Thursday" => 4, "Friday" => 5, "Saturday" => 6}

@@ -33,8 +33,16 @@
               </div>
               <div class="portfolio-view">
                 <ul class="nav nav-pills">
-                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/accept">+</a></li>
-                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">-</a></li>
+                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/accept">
+                    <span class="has-tooltip" data-toggle="tooltip" title="<%= "Accept" %>">
+                      +
+                    </span>
+                  </a></li>
+                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">
+                    <span class="has-tooltip" data-toggle="tooltip" title="<%= "Decline" %>">
+                      -
+                    </span>
+                  </a></li>
                 </ul>
               </div>
             </div>
@@ -70,12 +78,31 @@
                 <div class="portfolio-view">
                   <ul class="nav nav-pills">
                     <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
-                      <li><a href="/groups/<%= group.id %>">D</a></li>
+                      <li><a href="/groups/<%= group.id %>">
+                        <span class="has-tooltip" data-toggle="tooltip" title="<%= "See details" %>">
+                          @
+                        </span>
+                      </a></li>
                     <% end %>
-                    <li><a href="/events/new?group=<%= group.id %>">+</a></li>
-                    <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">-</a></li>
+
+                    <li><a href="/events/new?group=<%= group.id %>">
+                      <span class="has-tooltip" data-toggle="tooltip" title="<%= "Add group event" %>">
+                        +
+                      </span>
+                    </a></li>
+
+                    <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">
+                      <span class="has-tooltip" data-toggle="tooltip" title="<%= "Leave group" %>">
+                        -
+                      </span>
+                    </a></li>
+
                     <% if group.share_cal %>
-                      <li><a href="/groups/<%= group.id %>/events"><i class="fa fa-eye"></i></a></li>
+                      <li><a href="/groups/<%= group.id %>/events">
+                        <span class="has-tooltip" data-toggle="tooltip" title="<%= "See group calendar" %>">
+                          <i class="fa fa-eye"></i>
+                        </span>
+                      </a></li>
                     <% end %>
                   </ul>
                 </div>
@@ -86,3 +113,9 @@
     <% end %>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('.has-tooltip').tooltip();
+});
+</script>

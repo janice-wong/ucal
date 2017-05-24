@@ -15,7 +15,6 @@ Rails.application.routes.draw do
   get '/events/:id' => 'events#show'
   # get '/events/:id/edit' => 'events#edit'
   patch '/events/:id/cancel' => 'events#cancel'
-  # delete '/events/:id' => 'events#destroy'
   post '/events/options' => 'events#create_options'
   post '/events/send_options' => 'events#send_options'
   get '/option_proposals' => 'events#option_proposals'

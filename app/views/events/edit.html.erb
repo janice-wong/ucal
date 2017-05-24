@@ -1,11 +1,21 @@
-<%= form_tag "/events/#{@event.id}", method: :patch do %>
-  <p>name: <input type="text" name="name" value="<%= @event.name %>"></p>
-  <p>START AND END - UPDATE</p>
-  <p>duration: <input type="text" name="duration" value="<%= @event.duration %>"></p>
-  <p>location: <input type="text" name="location" value="<%= @event.location %>"></p>
-  <p><input class="btn btn-success" type="submit" value="Submit"></p>
-<% end %>
-
-<%= form_tag "/events/#{@event.id}", method: :delete do %>
-  <p><input class="btn btn-danger" type="submit" value="Delete"></p>
-<% end %>
+<div class="container">
+  <div class="row col-md-6">
+    <h4>Who</h4>
+    <% if Group.find(EventInvitation.find_by(event_id: @event.id).group_id) %>
+      <p><%= Group.find(EventInvitation.find_by(event_id: @event.id).group_id).name %></p>
+    <% end %>
+    <br>
+    <%= form_tag "/events/#{@event.id}", method: :patch do %>
+      <h4>What</h4>
+      <p><input type="text" name="name" value="<%= @event.name %>"></p>
+      <br>
+      <h4>Where</h4>
+      <p><input type="text" name="location" value="<%= @event.location %>"></p>
+      <br>
+      <h4>When</h4>
+      <p><%= @event.start.strftime("%a, %b %d %I:%M %P")%> - <%= @event.end.strftime("%I:%M %P") %></p>
+      <br>
+      <p><input class="btn btn-success" type="submit" value="Submit"></p>
+    <% end %>
+  </div>
+</div>
