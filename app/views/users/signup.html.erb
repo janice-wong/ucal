@@ -1,3 +1,12 @@
+<% if @signup_failure %>
+  <div class="col-md-12">
+    <div class="alert alert-warning fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><%= @signup_failure %></h4>
+    </div>
+  </div>
+<% end %>
+
 <h1 class="text-center wow fadeIn">Sign Up</h1>
 
 <section id="home-slider">

@@ -13,14 +13,14 @@ class EventsController < ApplicationController
     if current_user
       EventInvitation.where(user_id: current_user.id).each do |invitation|
         if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).start > DateTime.current
+          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).end > DateTime.current
             @pending_events << invitation.event
           else
             @pending_events.unshift(invitation.event)
             pending_counter += 1
           end
         elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).start > DateTime.current
+          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).end > DateTime.current
             @accepted_events << invitation.event
           else
             @accepted_events.unshift(invitation.event)
@@ -166,31 +166,25 @@ class EventsController < ApplicationController
   end
 
 # need to build edit method out
-  def edit
-    @event = Event.find(params[:id])
-    redirect_to "/events/#{@event.id}"
-  end
+  # def edit
+  #   @event = Event.find(params[:id])
+  #   redirect_to "/events/#{@event.id}"
+  # end
 
-# need to build update method out
-  def update
+  def cancel
     @event = Event.find(params[:id])
     @event.update(
-      name: params[:name],
-      start_date: params[:start_date],
-      end_date: params[:end_date],
-      start_time: params[:start_time],
-      end_time: params[:end_time],
-      location: params[:location]
+      status: "cancelled"
     )
-    redirect_to "/events/#{@event.id}"
+    redirect_to "/events"
   end
 
 # is destroy method even used?
-  def destroy
-    @event = Event.find(params[:id])
-    @event.update(status: "cancelled")
-    redirect_to '/events'
-  end
+  # def destroy
+  #   @event = Event.find(params[:id])
+  #   @event.update(status: "cancelled")
+  #   redirect_to '/events'
+  # end
 
   def create_options
     day_to_num = {"Sunday" => 0, "Monday" => 1, "Tuesday" => 2, "Wednesday" => 3, "Thursday" => 4, "Friday" => 5, "Saturday" => 6}

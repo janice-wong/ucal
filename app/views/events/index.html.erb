@@ -39,6 +39,8 @@
 
           </div>
         <% end %>
+      <% else %>
+        <h2>You have no pending events.</h2>
       <% end %>
 
       <% if @accepted_events.count > 0 %>
@@ -68,12 +70,16 @@
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
             <% end %>
 
-            <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
-              <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+            <% if EventInvitation.find_by(event_id: event.id, user_id: current_user.id).mem_type != "owner" %>
+              <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
+                <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+              <% end %>
             <% end %>
 
           </div>
         <% end %>
+      <% else %>
+        <h2>You have no upcoming events.</h2>
       <% end %>
     </div>
   </div>

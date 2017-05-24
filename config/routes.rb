@@ -13,9 +13,9 @@ Rails.application.routes.draw do
   get '/events/new' => 'events#new'
   post '/events' => 'events#create'
   get '/events/:id' => 'events#show'
-  get '/events/:id/edit' => 'events#edit'
-  patch '/events/:id' => 'events#update'
-  delete '/events/:id' => 'events#destroy'
+  # get '/events/:id/edit' => 'events#edit'
+  patch '/events/:id/cancel' => 'events#cancel'
+  # delete '/events/:id' => 'events#destroy'
   post '/events/options' => 'events#create_options'
   post '/events/send_options' => 'events#send_options'
   get '/option_proposals' => 'events#option_proposals'
@@ -41,6 +41,9 @@ Rails.application.routes.draw do
   patch '/eventinvitations/:id' => 'event_invitations#update'
 
   post '/twilio/process_response' => 'twilio#process_response'
+
+  get '/notifications' => 'notifications#index'
+  # mark as read
 
   namespace :api do
     namespace :v1 do
