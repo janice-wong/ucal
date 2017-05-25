@@ -17,7 +17,7 @@
             <p><strong>Options</strong></p>
             <select class="multiselect" multiple="multiple" name = "option_ids[]">
               <% Option.where(event_id: event_id, user_id: current_user.id, vote: "pending").each do |time_option| %>
-                <p><option value="<%= time_option.id %>"> <%= time_option.start.strftime("%a, %b %d %I:%M %P")%> - <%= time_option.end.strftime("%I:%M %P") %></option></p>
+                <p><option value="<%= time_option.id %>"> <%= (time_option.start).strftime("%a, %b %d %I:%M %P")%> - <%= (time_option.end).strftime("%I:%M %P") %></option></p>
               <% end %>
             </select>
             <input type="submit" class="btn btn-success" value="Vote">

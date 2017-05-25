@@ -26,7 +26,8 @@
 
             <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
 
-            <% if event.location && event.yelp %>
+
+            <% if event.location != "" && event.yelp != "" %>
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <a href="<%= event.yelp %>"><%= event.location %></a></p>
             <% elsif event.location != "" %>
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
@@ -64,7 +65,7 @@
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> TBD</p>
             <% end %>
 
-            <% if event.location && event.yelp %>
+            <% if event.location != "" && event.yelp != "" %>
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <a href="<%= event.yelp %>"><%= event.location %></a></p>
             <% elsif event.location != "" %>
               <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
