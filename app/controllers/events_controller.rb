@@ -320,8 +320,8 @@ class EventsController < ApplicationController
     option_array.each do |option|
       (user_array - [current_user]).each do |user|
         Option.create(
-          start: option[:start_time] - 4.hours,
-          end: option[:end_time] - 4.hours,
+          start: option[:start_time],
+          end: option[:end_time],
           event_id: event.id,
           user_id: user.id,
           vote: "pending"
