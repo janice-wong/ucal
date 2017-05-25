@@ -310,7 +310,7 @@ class EventsController < ApplicationController
     min = params[:min].to_i
 
     params[:options].each do |option|
-      start = Time.strptime(option, "%a, %b %d %I:%M %p") - 4.hours
+      start = Time.strptime(option, "%a, %b %d %I:%M %p")
       option_array << {
         :start_time => start,
         :end_time => start + min.minutes
