@@ -387,6 +387,8 @@ class EventsController < ApplicationController
       participants << invite.user
     end
 
+    twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
+
     (participants - [current_user]).each do |member|
       EventInvitation.create(
         event_id: event.id,
@@ -395,6 +397,14 @@ class EventsController < ApplicationController
         mem_type: "Participant",
         decision: "pending"
       )
+
+      if member.preference == "phone"
+        twilio_client.account.sms.messages.create(
+          :from => "+1#{ENV["twilio_phone_number"]}",
+          :to => "+1#{member.phone}",
+          :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with YES #{event.id}E or NO #{event.id}E to accept or decline."
+        )
+      end
     end
 
     redirect_to "/events"
