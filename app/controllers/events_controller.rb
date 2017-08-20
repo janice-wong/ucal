@@ -5,33 +5,13 @@ class EventsController < ApplicationController
     if params[:login] == "success"
       @login_success = "Successfully logged in!"
     end
-    @pending_events = []
-    @accepted_events = []
-    pending_counter = 0
-    accepted_counter = 0
 
-    if current_user
-      EventInvitation.where(user_id: current_user.id).each do |invitation|
-        if invitation.decision == "pending" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).end > DateTime.current
-            @pending_events << invitation.event
-          else
-            @pending_events.unshift(invitation.event)
-            pending_counter += 1
-          end
-        elsif invitation.decision == "Accept" && Event.find(invitation.event_id).status != "cancelled"
-          if Event.find(invitation.event_id).start && Event.find(invitation.event_id).end > DateTime.current
-            @accepted_events << invitation.event
-          else
-            @accepted_events.unshift(invitation.event)
-            accepted_counter += 1
-          end
-        end
-      end
-    end
+    @events = current_user.event_invitations.where(decision: 'pending').or(current_user.event_invitations.where(decision: 'Accept')).select { |invitation| invitation.event.end > DateTime.current }.map { |upcoming_invitation| {decision: upcoming_invitation.decision, event: upcoming_invitation} }.sort_by { |invitation| invitation[:event][:start] }
 
-    @pending_events = @pending_events[pending_counter..-1].sort_by {|vn| vn[:start]}
-    @accepted_events = @accepted_events[accepted_counter..-1].sort_by {|vn| vn[:start]}
+    @pending_count = @events.count { |event| event[:decision] == 'pending' }
+    @accepted_count = @events.length - @pending_count
+    @pending_events = current_user.event_invitations.where(decision: 'pending').select { |e| e.event.end > DateTime.current }.map { |invitation| invitation.event }.sort_by { |event| event[:start] }
+    @accepted_events = current_user.event_invitations.where(decision: 'Accept').select { |e| e.event.end > DateTime.current && e.event.status != 'cancelled' }.map { |invitation| invitation.event }.sort_by { |event| event[:start] }
   end
 
   def new

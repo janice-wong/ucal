@@ -13,15 +13,16 @@
       <div id="calendar"></div>
     </div>
     <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms" id="contained">
-      <% if @pending_events.count > 0 %>
+      <% if @pending_count > 0 %>
         <h2><strong>Pending Events</strong></h2>
-        <% @pending_events.each do |event| %>
+        <% @events.where(decision: 'pending').each do |pending_event| %>
           <div class="well" id="customized-well">
 
-            <h4><%= event.name %></h4>
-
-            <% if EventInvitation.find_by(event_id: event.id).group_id %>
+            <h4><%= pending_event.name %></h4>
+            <% if event.event_invitations.first.group_id %>
               <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= Group.find(EventInvitation.find_by(event_id: event.id).group_id).name %> - <%= EventInvitation.find_by(event_id: event.id, mem_type: "owner").user.name %></p>
+
+            <% if event.event_invitations.first.group_id %>
             <% end %>
 
             <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>

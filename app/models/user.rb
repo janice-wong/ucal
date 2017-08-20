@@ -7,4 +7,5 @@ class User < ApplicationRecord
   has_many :group_invitations
   has_many :blocks
   has_many :options
+  has_many :event_invitations
 end

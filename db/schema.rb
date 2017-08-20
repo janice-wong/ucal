@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524172842) do
+ActiveRecord::Schema.define(version: 20170820210338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20170524172842) do
 
   create_table "event_invitations", force: :cascade do |t|
     t.integer  "event_id"
-    t.integer  "group_id"
     t.integer  "user_id"
     t.string   "mem_type"
     t.string   "decision"
@@ -41,6 +40,7 @@ ActiveRecord::Schema.define(version: 20170524172842) do
     t.datetime "start"
     t.datetime "end"
     t.string   "yelp"
+    t.integer  "group_id"
   end
 
   create_table "friendships", force: :cascade do |t|
