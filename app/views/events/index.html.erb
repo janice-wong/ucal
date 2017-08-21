@@ -15,23 +15,39 @@
     <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms" id="contained">
     <% if @pending_count + @accepted_count == 0 %>
       <h2>No upcoming events</h2>
-    <% elsif @pending_count > 0 %>
-      <h2><strong>Pending Event</strong></h2>
-        <% @events.where(decision: 'pending').each do |pending_invite| %>
+    <% else %>
+      <% if @pending_count > 0 %>
+        <h2><strong>Pending Events</strong></h2>
+        <% @events.select { |event_invite| event_invite[:decision] == 'pending' }.each do |pending_invite| %>
           <div class="well" id="customized-well">
-            <h4><%= pending_invite.name %></h4>
+            <h4><%= pending_invite[:event].name %></h4>
             <% if pending_invite[:event].group %>
-              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= pending_invite[:event].group.name %> - <%= pending_invite.owner.name %></p>
+              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= pending_invite[:event].group.name %> - <%= pending_invite[:owner].name %></p>
             <% end %>
-            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= pending_invite[:event].friendly_time(event.start) %> - <%= pending_invite[:event].friendly_time_only(event.end) %></p>
-            <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= pending_invite[:event].friendly_time(pending_invite[:event].start) %> - <%= pending_invite[:event].friendly_time_only(pending_invite[:event].end) %></p>
+            <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: pending_invite[:event].id, user_id: current_user.id)[0].id}", method: :patch do %>
               <p><input type="submit" class="btn btn-success" name="decision" value="Accept">
               <input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
             <% end %>
           </div>
         <% end %>
+      <% end %>
+      <% if @accepted_count > 0 %>
+        <h2><strong>Accepted Events</strong></h2>
+        <% @events.select { |event_invite| event_invite[:decision] == 'Accept' }.each do |accepted_invite| %>
+          <div class="well" id="customized-well">
+            <h4><%= accepted_invite[:event].name %></h4>
+            <% if accepted_invite[:event].group %>
+              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= accepted_invite[:event].group.name %> - <%= accepted_invite[:owner].name %></p>
+            <% end %>
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= accepted_invite[:event].friendly_time(accepted_invite[:event].start) %> - <%= accepted_invite[:event].friendly_time_only(accepted_invite[:event].end) %></p>
+            <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: accepted_invite[:event].id, user_id: current_user.id)[0].id}", method: :patch do %>
+              <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
     <% end %>
-
     </div>
   </div>
 </div>
