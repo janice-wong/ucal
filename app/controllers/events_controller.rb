@@ -6,22 +6,17 @@ class EventsController < ApplicationController
       @login_success = "Successfully logged in!"
     end
 
-    @events = current_user.event_invitations.where(decision: 'pending').or(current_user.event_invitations.where(decision: 'Accept')).select { |invitation| invitation.event.end > DateTime.current }.map { |upcoming_invitation| {decision: upcoming_invitation.decision, event: upcoming_invitation} }.sort_by { |invitation| invitation[:event][:start] }
+    # show the current users's upcoming pending and accepted events and sort by time; create hash for each event with 3 keys - decision, event, and owner
+    @events = current_user.event_invitations.where(decision: 'pending').or(current_user.event_invitations.where(decision: 'Accept')).select { |invitation| invitation.event.end > DateTime.current }.map { |upcoming_invitation| {decision: upcoming_invitation.decision, event: upcoming_invitation.event, owner: EventInvitation.find_by(event_id: upcoming_invitation.event.id, mem_type: 'owner').user } }.sort_by { |invitation| invitation[:event][:start] }
 
     @pending_count = @events.count { |event| event[:decision] == 'pending' }
     @accepted_count = @events.length - @pending_count
-    @pending_events = current_user.event_invitations.where(decision: 'pending').select { |e| e.event.end > DateTime.current }.map { |invitation| invitation.event }.sort_by { |event| event[:start] }
-    @accepted_events = current_user.event_invitations.where(decision: 'Accept').select { |e| e.event.end > DateTime.current && e.event.status != 'cancelled' }.map { |invitation| invitation.event }.sort_by { |event| event[:start] }
   end
 
   def new
-    @groups = []
-    User.find(current_user.id).group_invitations.where(decision: "Accept").each do |invitation|
-      if Group.find(invitation.group_id).status == "active"
-        @groups << Group.find(invitation.group_id).name
-      end
-    end
+    @groups = User.find(current_user.id).group_invitations.where(decision: "Accept").select { |invitation| invitation.group.status == 'active' }.map { |invitation| invitation.group }
 
+    # can what's below be refactored?
     if params[:start]
       @default_start_year = params[:start][11..14].to_i.to_i
       @default_start_month = DateTime.strptime(params[:start][4..6], "%B").month
@@ -57,16 +52,19 @@ class EventsController < ApplicationController
         end: DateTime.strptime(params[:end], "%m/%d/%Y %l:%M %p"),
         location: params[:location],
         yelp: yelp_link,
-        status: "sent"
+        status: "sent",
+        # need to update the below to accept multiple group invites
+        group_id: params[:groups][0].to_i
       )
 
-      event_invite = EventInvitation.create(
+      EventInvitation.create(
         event_id: event.id,
         user_id: current_user.id,
         mem_type: "owner",
         decision: "Accept"
       )
 
+      # create 15 minute blocks each time current user creates an event
       min_duration = (event.end - event.start) / 60
       i = 0
       (min_duration / 15).to_i.times do
@@ -77,34 +75,26 @@ class EventsController < ApplicationController
         i += (15 * 60)
       end
 
-      twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
+      # twilio_client = Twilio::REST::Client.new ENV["twilio_sid"], ENV["twilio_token"]
 
       if params[:groups]
-        params[:groups].each do |group|
-          event_invite.update(group_id: Group.find_by(name: group).id)
-          
-          members = []
-          GroupInvitation.where(group_id: Group.find_by(name: group).id, decision: "Accept").each do |group_invite|
-            members << User.find(group_invite.user_id)
-          end
-          members -= [current_user]
-          members.each do |member|
-            EventInvitation.create(
-              event_id: event.id,
-              group_id: Group.find_by(name: group).id,
-              user_id: member.id,
-              mem_type: "Partcipant",
-              decision: "pending"
-            )
+        # need to update the below to accept multiple group invites
+        members = GroupInvitation.where(group_id: params[:groups][0].to_i, decision: 'Accept').map { |group_invite| group_invite.user } - [current_user]
+        members.each do |member|
+          EventInvitation.create(
+            event_id: event.id,
+            user_id: member.id,
+            mem_type: "Partcipant",
+            decision: "pending"
+          )
 
-            if member.preference == "phone"
-              twilio_client.account.sms.messages.create(
-                :from => "+1#{ENV["twilio_phone_number"]}",
-                :to => "+1#{member.phone}",
-                :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with YES #{event.id}E or NO #{event.id}E to accept or decline."
-              )
-            end
-          end
+          # if member.preference == "phone"
+          #   twilio_client.account.sms.messages.create(
+          #     :from => "+1#{ENV["twilio_phone_number"]}",
+          #     :to => "+1#{member.phone}",
+          #     :body => "#{EventInvitation.find_by(event_id: event.id, mem_type: 'owner').user.name} invites you to #{event.name} on #{event.start.strftime('%a, %b %d %I:%M %P')}. Reply with YES #{event.id}E or NO #{event.id}E to accept or decline."
+          #   )
+          # end
         end
       end
       redirect_to '/events'

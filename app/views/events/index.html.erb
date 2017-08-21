@@ -13,76 +13,25 @@
       <div id="calendar"></div>
     </div>
     <div class="col-md-3" data-wow-duration="1000ms" data-wow-delay="300ms" id="contained">
-      <% if @pending_count > 0 %>
-        <h2><strong>Pending Events</strong></h2>
-        <% @events.where(decision: 'pending').each do |pending_event| %>
+    <% if @pending_count + @accepted_count == 0 %>
+      <h2>No upcoming events</h2>
+    <% elsif @pending_count > 0 %>
+      <h2><strong>Pending Event</strong></h2>
+        <% @events.where(decision: 'pending').each do |pending_invite| %>
           <div class="well" id="customized-well">
-
-            <h4><%= pending_event.name %></h4>
-            <% if event.event_invitations.first.group_id %>
-              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= Group.find(EventInvitation.find_by(event_id: event.id).group_id).name %> - <%= EventInvitation.find_by(event_id: event.id, mem_type: "owner").user.name %></p>
-
-            <% if event.event_invitations.first.group_id %>
+            <h4><%= pending_invite.name %></h4>
+            <% if pending_invite[:event].group %>
+              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= pending_invite[:event].group.name %> - <%= pending_invite.owner.name %></p>
             <% end %>
-
-            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
-
-
-            <% if event.location != "" && event.yelp != "" %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <a href="<%= event.yelp %>"><%= event.location %></a></p>
-            <% elsif event.location != "" %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
-            <% end %>
-
+            <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= pending_invite[:event].friendly_time(event.start) %> - <%= pending_invite[:event].friendly_time_only(event.end) %></p>
             <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
               <p><input type="submit" class="btn btn-success" name="decision" value="Accept">
               <input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
             <% end %>
-
           </div>
         <% end %>
-      <% else %>
-        <h2>You have no pending events.</h2>
-      <% end %>
+    <% end %>
 
-      <% if @accepted_events.count > 0 %>
-        <h2><strong>Upcoming Events</strong></h2>
-        <% @accepted_events.each do |event| %>
-          <div class="well" id="customized-well">
-
-            <% if EventInvitation.find_by(event_id: event.id, user_id: current_user.id).mem_type == "owner" %>
-              <h4><a href="/events/<%= event.id %>"><%= event.name %></a></h4>
-            <% else %>
-              <h4><%= event.name %></h4>
-            <% end %>
-
-            <% if EventInvitation.find_by(event_id: event.id).group_id %>
-              <p><img src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/16/users-icon.png"> <%= Group.find(EventInvitation.find_by(event_id: event.id).group_id).name %> - <%= EventInvitation.find_by(event_id: event.id, mem_type: "owner").user.name %></p>
-            <% end %>
-
-            <% if event.start %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= event.friendly_time(event.start) %> - <%= event.friendly_time_only(event.end) %></p>
-            <% else %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> TBD</p>
-            <% end %>
-
-            <% if event.location != "" && event.yelp != "" %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <a href="<%= event.yelp %>"><%= event.location %></a></p>
-            <% elsif event.location != "" %>
-              <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Maps-Location-icon.png"> <%= event.location %></p>
-            <% end %>
-
-            <% if EventInvitation.find_by(event_id: event.id, user_id: current_user.id).mem_type != "owner" %>
-              <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: event.id, user_id: current_user.id)[0].id}", method: :patch do %>
-                <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
-              <% end %>
-            <% end %>
-
-          </div>
-        <% end %>
-      <% else %>
-        <h2>You have no upcoming events.</h2>
-      <% end %>
     </div>
   </div>
 </div>
