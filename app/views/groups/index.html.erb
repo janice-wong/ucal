@@ -1,109 +1,83 @@
 <div class="container">
   <div class="row">
-    <% if @pending_groups.count < 1 && @accepted_groups.count < 1 %>
-      <h1>You have no groups. How sad :( </h1>
-    <% end %>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <% if @pending_groups.count > 0 %>
-      <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Pending Groups</h1>
-      <% @pending_groups.each do |group| %>
-        <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-          <div class="portfolio-wrapper">   
-            <div class="portfolio-single">
-              <div class="portfolio-thumb">
-                <h2><strong><%= group.name.capitalize %></strong></h2>
-                <p>
-                  <strong>Share Calendar? </strong>
-                  <% if group.share_cal %>
-                    Yes
-                  <% else %>
-                    No
-                  <% end %>
-                </p>
-                <p><strong>Owner: </strong><%= GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user.name.capitalize %></p>
-                <% members = [] %>
-                <% GroupInvitation.where(group_id:group.id,decision:"pending").each do |invitation| %>
-                  <% members << invitation.user.name.capitalize %>
-                <% end %>
-                <p><strong>Members: </strong><%= members.join(", ") %></p>
-                <br>
-              </div>
-              <div class="portfolio-view">
-                <ul class="nav nav-pills">
-                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/accept">
-                    <span class="has-tooltip" data-toggle="tooltip" title="<%= "Accept" %>">
-                      +
-                    </span>
-                  </a></li>
-                  <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">
-                    <span class="has-tooltip" data-toggle="tooltip" title="<%= "Decline" %>">
-                      -
-                    </span>
-                  </a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
-  <div class="row">
-    <% if @accepted_groups.count > 0 %>
-      <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Accepted Groups</h1>
-        <% @accepted_groups.each do |group| %>
+    <% if @pending_count + @accepted_count == 0 %>
+      <h1>No groups yet - create one <a href="/groups/new">here</a>! </h1>
+    <% else %>
+      <% if @pending_count > 0 %>
+        <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Pending Groups</h1>
+        <% @groups.select{ |group| group[:decision] == 'pending' }.each do |group| %>
           <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
             <div class="portfolio-wrapper">   
               <div class="portfolio-single">
                 <div class="portfolio-thumb">
-                  <h2><strong><%= group.name.capitalize %></strong></h2>
+                  <h2><strong><%= group[:group_name].capitalize %></strong></h2>
                   <p>
                     <strong>Share Calendar? </strong>
-                    <% if group.share_cal %>
+                    <% if group[:share_cal] %>
                       Yes
                     <% else %>
                       No
                     <% end %>
                   </p>
-                  <p><strong>Owner: </strong><%= GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user.name.capitalize %></p>
-                  <% members = [] %>
-                  <% GroupInvitation.where(group_id:group.id,decision:"Accept").each do |invitation| %>
-                    <% members << invitation.user.name.capitalize %>
-                  <% end %>
-                  <p><strong>Members: </strong><%= members.join(", ") %></p>
+                  <p><strong>Owner: </strong><%= group[:group_owner].name.capitalize %></p>
+                  <p><strong>Members: </strong><%= group[:members] %></p>
                   <br>
                 </div>
                 <div class="portfolio-view">
                   <ul class="nav nav-pills">
-                    <% if current_user == GroupInvitation.find_by(group_id: group.id, mem_type: "owner").user %>
-                      <li><a href="/groups/<%= group.id %>">
-                        <span class="has-tooltip" data-toggle="tooltip" title="<%= "See details" %>">
-                          @
-                        </span>
+                    <li><a href="/groupinvitations/<%= Group.find_by(group_id: group.id, user_id: current_user.id).id %>/accept">
+                      <span class="has-tooltip" data-toggle="tooltip" title="Accept">+</span>
+                    </a></li>
+
+                    <li><a href="/groupinvitations/<%= Group.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">
+                      <span class="has-tooltip" data-toggle="tooltip" title="Decline">-</span>
+                    </a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <% if @accepted_count > 0 %>
+        <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Groups</h1>
+        <% @groups.select{ |group| group[:decision] == 'Accept' }.each do |group| %>
+          <div class="col-sm-3 col-xs-6 wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+            <div class="portfolio-wrapper">   
+              <div class="portfolio-single">
+                <div class="portfolio-thumb">
+                  <h2><strong><%= group[:group_name].capitalize %></strong></h2>
+                  <p>
+                    <strong>Share Calendar? </strong>
+                    <% if group[:share_cal] %>
+                      Yes
+                    <% else %>
+                      No
+                    <% end %>
+                  </p>
+                  <p><strong>Owner: </strong><%= group[:group_owner].name.capitalize %></p>
+                  <p><strong>Members: </strong><%= group[:members] %></p>
+                  <br>
+                </div>
+                <div class="portfolio-view">
+                  <ul class="nav nav-pills">
+                    <% if current_user == group[:group_owner] %>
+                      <li><a href="/groups/<%= group[:id] %>">
+                        <span class="has-tooltip" data-toggle="tooltip" title="See details">@</span>
                       </a></li>
                     <% end %>
 
-                    <li><a href="/events/new?group=<%= group.id %>">
-                      <span class="has-tooltip" data-toggle="tooltip" title="<%= "Add group event" %>">
-                        +
-                      </span>
+                    <li><a href="/events/new?group=<%= group[:id] %>">
+                      <span class="has-tooltip" data-toggle="tooltip" title="Add group event">+</span>
                     </a></li>
 
-                    <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).id %>/decline">
-                      <span class="has-tooltip" data-toggle="tooltip" title="<%= "Leave group" %>">
-                        -
-                      </span>
+                    <li><a href="/groupinvitations/<%= GroupInvitation.find_by(group_id: group[:group_id], user_id: current_user.id).id %>/decline">
+                      <span class="has-tooltip" data-toggle="tooltip" title="Leave group">-</span>
                     </a></li>
 
-                    <% if group.share_cal %>
-                      <li><a href="/groups/<%= group.id %>/events">
-                        <span class="has-tooltip" data-toggle="tooltip" title="<%= "See group calendar" %>">
-                          <i class="fa fa-eye"></i>
-                        </span>
+                    <% if group[:share_cal] %>
+                      <li><a href="/groups/<%= group[:id] %>/events">
+                        <span class="has-tooltip" data-toggle="tooltip" title="See group calendar"><i class="fa fa-eye"></i></span>
                       </a></li>
                     <% end %>
                   </ul>
@@ -112,6 +86,7 @@
             </div>
           </div>
         <% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

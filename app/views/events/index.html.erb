@@ -42,7 +42,7 @@
             <% end %>
             <p><img src="http://icons.iconarchive.com/icons/icons8/ios7/16/Time-And-Date-Timer-icon.png"> <%= accepted_invite[:event].friendly_time(accepted_invite[:event].start) %> - <%= accepted_invite[:event].friendly_time_only(accepted_invite[:event].end) %></p>
             <%= form_tag "/eventinvitations/#{EventInvitation.where(event_id: accepted_invite[:event].id, user_id: current_user.id)[0].id}", method: :patch do %>
-              <p><input type="submit" class="btn btn-danger" name="decision" value="Decline"></p>
+              <p><input type="submit" class="btn btn-danger" name="decision" value="<%= accepted_invite[:owner] == current_user ? 'Cancel' : 'Decline' %>"></p>
             <% end %>
           </div>
         <% end %>

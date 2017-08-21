@@ -11,8 +11,6 @@ class EventsController < ApplicationController
 
     @pending_count = @events.count { |event| event[:decision] == 'pending' }
     @accepted_count = @events.length - @pending_count
-
-    p @events
   end
 
   def new

@@ -1,14 +1,17 @@
 class GroupsController < ApplicationController
   def index
-    @pending_groups = []
-    @accepted_groups = []
-    GroupInvitation.where(user_id: current_user[:id]).each do |invitation|
-      if invitation.decision == "pending" && invitation.group.status == "active"
-        @pending_groups << invitation.group
-      elsif invitation.decision == "Accept" && invitation.group.status == "active"
-        @accepted_groups << invitation.group
-      end
-    end
+    @groups = Group.where(status: 'active').select { |group| group.group_invitations.where(user_id: current_user.id, decision: 'pending').or(group.group_invitations.where(user_id: current_user.id, decision: 'Accept')) }.map { |group| {
+      group_id: group.id, 
+      group_name: group.name, 
+      share_cal: group.share_cal, 
+      group_owner: GroupInvitation.find_by(group_id: group.id, mem_type: 'owner').user, 
+      decision: GroupInvitation.find_by(group_id: group.id, user_id: current_user.id).decision,
+      members: group.group_invitations.select { |group_invite| group_invite.decision == 'Accept' }.map { |group_invite| group_invite.user.name }.join(", ") }
+    }
+
+    @pending_count = @groups.count { |group| group[:decision] == 'pending' }
+    @accepted_count = @groups.length - @pending_count
+
     render 'index.html.erb'
   end
 
